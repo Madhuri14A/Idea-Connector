@@ -1,0 +1,22 @@
+{
+  "name": "idea-connector-backend",
+  "version": "1.0.0",
+  "description": "Backend for Idea Connector - Note-taking with AI connections",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "neo4j-driver": "^5.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "natural": "^6.7.0",
+    "string-similarity": "^4.0.4",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

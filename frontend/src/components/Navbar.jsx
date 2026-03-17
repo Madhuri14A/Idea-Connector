@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
-function Navbar() {
+function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    navigate('/');
+  };
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
@@ -43,10 +56,23 @@ function Navbar() {
         </ul>
 
         <div className="nav-actions">
-          <Link to="/notes/new" className="btn-new-note">
-            <span className="btn-icon">✨</span>
-            New Note
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/notes/new" className="btn-new-note">
+                New Note
+              </Link>
+              <div className="user-menu">
+                <span className="user-name">{user?.name}</span>
+                <button onClick={handleLogout} className="btn-logout">
+                  Logout
+                </button>
+              </div>
+            </>
+          ) : (
+            <Link to="/login" className="btn-login">
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </nav>

@@ -2,20 +2,19 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const driver = require('../config/neo4j');
+const authMiddleware = require('../middleware/auth');
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Backend is running' });
 });
 
-// Routes
-app.use('/api/notes', require('../routes/notes'));
+app.use('/auth', require('../routes/auth'));
+app.use('/api/notes', authMiddleware, require('../routes/notes'));
 // app.use('/api/connections', require('../routes/connections'));
 // app.use('/api/search', require('../routes/search'));
 // app.use('/api/suggestions', require('../routes/suggestions'));

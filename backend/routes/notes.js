@@ -9,10 +9,13 @@ router.get('/', async (req, res) => {
   const session = driver.session();
   try {
     const result = await session.run(
-      `MATCH (n:Note) 
+      `MATCH (u:User {email: $userId})
+       MATCH (n:Note)
+       WHERE (u)-[:CREATED]->(n) OR NOT (n)<-[:CREATED]-()
        OPTIONAL MATCH (n)-[r:RELATES_TO]-(c:Note) 
        RETURN n, collect({note: c, strength: r.strength}) as connections 
-       ORDER BY n.createdAt DESC`
+       ORDER BY n.createdAt DESC`,
+      { userId: req.userId }
     );
     
     const notes = result.records.map(record => ({
@@ -170,16 +173,18 @@ router.post('/', async (req, res) => {
   try {
     const id = uuidv4();
     const result = await session.run(
-      `CREATE (n:Note {
+      `MATCH (u:User {email: $userId})
+       CREATE (n:Note {
         id: $id,
         title: $title,
         content: $content,
         tags: $tags,
         createdAt: datetime(),
         updatedAt: datetime()
-      })
-      RETURN n`,
-      { id, title, content, tags }
+       })
+       CREATE (u)-[:CREATED]->(n)
+       RETURN n`,
+      { id, title, content, tags, userId: req.userId }
     );
     
     const note = result.records[0].get('n').properties;

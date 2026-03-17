@@ -81,7 +81,7 @@
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .btn-new-note {
@@ -106,6 +106,49 @@
   box-shadow: 0 7px 20px rgba(217, 119, 6, 0.3);
 }
 
-.btn-new-note .btn-icon {
-  font-size: 1.1rem;
+.btn-login {
+  background: #D97706;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-login:hover {
+  background: #B45309;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-left: 1px solid #E5E7EB;
+  padding-left: 1rem;
+}
+
+.user-name {
+  color: #1A1A1A;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.btn-logout {
+  background: #D97706;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 14px;
+}
+
+.btn-logout:hover {
+  background: #B45309;
 }

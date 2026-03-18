@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getNotes } from '../utils/api';
+import { timeAgo } from '../utils/date';
 import { Link, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
@@ -52,20 +53,7 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  const getTimeAgo = (dateString) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now - date;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    
-    if (diffMins < 60) return `${diffMins} minutes ago`;
-    if (diffHours < 24) return `${diffHours} hours ago`;
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
-  };
+  const getTimeAgo = timeAgo;
 
   const getTagColor = (tag) => {
     const colors = {

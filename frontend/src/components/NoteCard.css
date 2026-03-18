@@ -17,7 +17,7 @@
 .note-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
-  border-color: rgba(236, 72, 153, 0.3);
+  border-color: rgba(0, 240, 255, 0.3);
 }
 
 .note-card::before {
@@ -80,7 +80,7 @@
 }
 
 .action-btn:hover {
-  background-color: rgba(236, 72, 153, 0.08);
+  background-color: rgba(0, 240, 255, 0.08);
   color: var(--accent);
 }
 
@@ -115,16 +115,16 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
-  background: rgba(236, 72, 153, 0.08);
+  background: rgba(0, 240, 255, 0.08);
   color: var(--accent);
-  border: 1px solid rgba(236, 72, 153, 0.15);
+  border: 1px solid rgba(0, 240, 255, 0.15);
   transition: all 0.2s;
 }
 
 .note-tag:hover {
-  background: rgba(236, 72, 153, 0.15);
+  background: rgba(0, 240, 255, 0.15);
   color: var(--accent-hover);
-  border-color: rgba(236, 72, 153, 0.3);
+  border-color: rgba(0, 240, 255, 0.3);
 }
 
 .note-tag-more {

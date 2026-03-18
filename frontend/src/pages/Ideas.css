@@ -40,7 +40,7 @@
 
 .btn-generate {
   background: var(--accent);
-  color: white;
+  color: #070B14;
   border: none;
   padding: 0.875rem 2rem;
   border-radius: 8px;
@@ -48,13 +48,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(0, 240, 255, 0.3);
 }
 
 .btn-generate:hover:not(:disabled) {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 10px 15px -3px rgba(0, 240, 255, 0.4);
 }
 
 .btn-generate:disabled {

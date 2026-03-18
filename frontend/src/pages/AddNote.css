@@ -54,7 +54,7 @@
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px #FDE2E9;
-  background-color: white;
+  background-color: rgba(8, 14, 35, 0.90);
 }
 
 .form-actions {
@@ -75,14 +75,14 @@
 
 .btn-primary {
   background: var(--accent);
-  color: white;
-  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3);
+  color: #070B14;
+  box-shadow: 0 4px 6px -1px rgba(0, 240, 255, 0.3);
 }
 
 .btn-primary:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.4);
+  box-shadow: 0 10px 15px -3px rgba(0, 240, 255, 0.4);
 }
 
 .btn-primary:disabled {
@@ -94,7 +94,7 @@
 }
 
 .btn-secondary {
-  background: white;
+  background: rgba(8, 14, 35, 0.92);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
 }

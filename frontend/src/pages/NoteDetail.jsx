@@ -1,3 +1,4 @@
+import { parseDate } from '../utils/date';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getNotes, deleteNote, updateNote, getRelatedNotes } from '../utils/api';
@@ -130,7 +131,7 @@ function NoteDetail() {
         <div className="note-content">
           <h1>{note.title}</h1>
           <p className="meta">
-            Created: {new Date(note.createdAt).toLocaleDateString()}
+            Created: {parseDate(note.createdAt).toLocaleDateString()}
           </p>
           <div className="tags">
             {note.tags?.map(tag => (

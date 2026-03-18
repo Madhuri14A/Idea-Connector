@@ -4,26 +4,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #FDE8F3;
+  background-color: #070B14;
   background-image:
-    radial-gradient(ellipse 70% 55% at 8%  8%,  rgba(244, 63, 94,  0.25) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 92% 92%,  rgba(236, 72, 153, 0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 8%,   rgba(251, 113, 166,0.20) 0%, transparent 55%),
-    radial-gradient(ellipse 45% 45% at 20% 88%,  rgba(253, 164, 175,0.18) 0%, transparent 55%);
+    radial-gradient(ellipse 80% 60% at 8%  5%,  rgba(15, 40, 140, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 55% at 92% 92%,  rgba(90, 10, 160, 0.45) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 85% 8%,   rgba(0, 90, 180, 0.30) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 15% 85%,  rgba(0, 180, 220, 0.12) 0%, transparent 60%);
   background-attachment: fixed;
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(8, 14, 35, 0.82);
   backdrop-filter: blur(28px) saturate(200%);
   -webkit-backdrop-filter: blur(28px) saturate(200%);
   padding: 3rem 2.5rem;
   border-radius: 24px;
-  box-shadow: 0 24px 64px rgba(236, 72, 153, 0.18), inset 0 1px 0 rgba(255,255,255,0.9);
+  box-shadow: 0 24px 64px rgba(0, 240, 255, 0.18), inset 0 1px 0 rgba(0, 240, 255, 0.08);
   text-align: center;
   max-width: 450px;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 240, 255, 0.10);
   position: relative;
 }
 
@@ -49,12 +49,12 @@
 .form-toggle {
   display: flex;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.45);
+  background: rgba(8, 14, 35, 0.50);
   backdrop-filter: blur(8px);
   padding: 0.4rem;
   border-radius: 10px;
   width: 100%;
-  border: 1px solid rgba(236, 72, 153, 0.12);
+  border: 1px solid rgba(0, 240, 255, 0.12);
 }
 
 .toggle-btn {
@@ -72,12 +72,12 @@
 
 .toggle-btn.active {
   background: var(--accent);
-  color: white;
-  box-shadow: 0 3px 10px rgba(236, 72, 153, 0.3);
+  color: #070B14;
+  box-shadow: 0 3px 10px rgba(0, 240, 255, 0.3);
 }
 
 .toggle-btn:hover:not(.active) {
-  background: rgba(236, 72, 153, 0.08);
+  background: rgba(0, 240, 255, 0.08);
   color: var(--accent);
 }
 
@@ -89,9 +89,9 @@ form {
 
 .form-input {
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(236, 72, 153, 0.18);
+  border: 1px solid rgba(0, 240, 255, 0.18);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(8, 14, 35, 0.55);
   backdrop-filter: blur(8px);
   color: var(--text-primary);
   font-size: 0.95rem;
@@ -102,8 +102,8 @@ form {
 .form-input:focus {
   outline: none;
   border-color: var(--accent);
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.14);
+  background: rgba(8, 14, 35, 0.90);
+  box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.14);
 }
 
 .form-input::placeholder {
@@ -113,10 +113,10 @@ form {
 .submit-btn {
   padding: 0.75rem 1rem;
   background: var(--accent);
-  color: white;
+  color: #070B14;
   border: none;
   border-radius: 0.5rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.95rem;
@@ -167,7 +167,7 @@ form {
 }
 
 .error-message {
-  background: #FEF2F2;
+  background: rgba(255, 60, 60, 0.10);
   color: var(--error);
   padding: 0.75rem;
   border-radius: 8px;
@@ -177,7 +177,7 @@ form {
 }
 
 .success-message {
-  background: #F0FDF4;
+  background: rgba(0, 200, 100, 0.10);
   color: #15803d;
   padding: 0.75rem;
   border-radius: 8px;

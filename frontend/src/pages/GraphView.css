@@ -85,7 +85,7 @@
 .btn-refresh {
   padding: 0.75rem 1.5rem;
   background: var(--accent);
-  color: white;
+  color: #070B14;
   border: none;
   border-radius: 12px;
   font-size: 0.95rem;
@@ -95,13 +95,13 @@
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35);
+  box-shadow: 0 4px 14px rgba(0, 240, 255, 0.35);
 }
 
 .btn-refresh:hover {
   background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 240, 255, 0.45);
 }
 
 .btn-refresh:active {
@@ -176,7 +176,7 @@
   position: fixed;
   top: 1.5rem;
   right: 1.5rem;
-  background: rgba(255, 255, 255, 0.98);
+  background: rgba(8, 14, 35, 0.97);
   backdrop-filter: blur(12px);
   padding: 1rem 1.25rem;
   border-radius: 12px;
@@ -234,7 +234,7 @@
   top: 0;
   width: 420px;
   height: 100vh;
-  background: white;
+  background: rgba(8, 14, 35, 0.92);
   box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
   overflow-y: auto;
   z-index: 1000;
@@ -254,7 +254,7 @@
   height: 40px;
   border-radius: 50%;
   border: 1px solid #e2e8f0;
-  background: white;
+  background: rgba(8, 14, 35, 0.92);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -453,7 +453,7 @@
 
 /* Guide Panel */
 .guide-panel {
-  background: white;
+  background: rgba(8, 14, 35, 0.92);
   padding: 1rem 1.5rem;
   border-radius: 14px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);

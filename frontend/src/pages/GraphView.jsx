@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { getNotes } from '../utils/api';
+import { parseDate } from '../utils/date';
 import './GraphView.css';
 
 function GraphView() {
@@ -93,17 +94,17 @@ function GraphView() {
     const simulation = d3.forceSimulation(nodes)
       .force('link', d3.forceLink(edges)
         .id(d => d.id)
-        .distance(150)
-        .strength(0.3)
+        .distance(90)
+        .strength(0.4)
       )
       .force('charge', d3.forceManyBody()
-        .strength(-500)
-        .distanceMax(400)
+        .strength(-250)
+        .distanceMax(300)
       )
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collide', d3.forceCollide()
-        .radius(50)
-        .strength(0.7)
+        .radius(20)
+        .strength(0.8)
       );
 
     const linkGroup = svg.append('g').attr('class', 'links');
@@ -114,29 +115,20 @@ function GraphView() {
       .enter()
       .append('line')
       .attr('class', 'connection-line')
-      .attr('stroke', d => d.createdBy === 'auto' ? '#CBD5E0' : '#667eea')
-      .attr('stroke-width', d => {
-        const baseWidth = d.createdBy === 'auto' ? 2 : 3;
-        return baseWidth + (d.strength * 2);
-      })
-      .attr('stroke-opacity', 0.5)
-      .attr('stroke-dasharray', d => d.createdBy === 'auto' ? '6,4' : 'none')
+      .attr('stroke', d => d.createdBy === 'auto' ? '#B0BEC5' : '#EC4899')
+      .attr('stroke-width', d => 1 + (d.strength * 1.5))
+      .attr('stroke-opacity', 0.65)
+      .attr('stroke-dasharray', d => d.createdBy === 'auto' ? '5,4' : 'none')
       .style('cursor', 'pointer')
       .on('mouseenter', function(event, d) {
         d3.select(this)
-          .attr('stroke-opacity', 0.9)
-          .attr('stroke-width', d => {
-            const baseWidth = d.createdBy === 'auto' ? 2 : 3;
-            return baseWidth + (d.strength * 2) + 2;
-          });
+          .attr('stroke-opacity', 1)
+          .attr('stroke-width', d => 2 + (d.strength * 1.5));
       })
       .on('mouseleave', function(event, d) {
         d3.select(this)
-          .attr('stroke-opacity', 0.5)
-          .attr('stroke-width', d => {
-            const baseWidth = d.createdBy === 'auto' ? 2 : 3;
-            return baseWidth + (d.strength * 2);
-          });
+          .attr('stroke-opacity', 0.65)
+          .attr('stroke-width', d => 1 + (d.strength * 1.5));
       });
 
     const nodeGroup = svg.append('g').attr('class', 'nodes');
@@ -157,8 +149,8 @@ function GraphView() {
         d3.select(this).select('.main-circle')
           .transition()
           .duration(200)
-          .attr('r', d => Math.max(18, d.connections * 3 + 18) * 1.15)
-          .attr('stroke-width', 4);
+          .attr('r', d => Math.max(7, d.connections * 1.5 + 7) * 1.2)
+          .attr('stroke-width', 3);
 
         d3.select(this).select('.glow-circle')
           .transition()
@@ -184,8 +176,8 @@ function GraphView() {
         d3.select(this).select('.main-circle')
           .transition()
           .duration(200)
-          .attr('r', d => Math.max(18, d.connections * 3 + 18))
-          .attr('stroke-width', 3);
+          .attr('r', d => Math.max(7, d.connections * 1.5 + 7))
+          .attr('stroke-width', 2);
 
         d3.select(this).select('.glow-circle')
           .transition()
@@ -205,7 +197,7 @@ function GraphView() {
     nodeGroups
       .append('circle')
       .attr('class', 'glow-circle')
-      .attr('r', d => Math.max(18, d.connections * 3 + 18) + 8)
+      .attr('r', d => Math.max(7, d.connections * 1.5 + 7) + 6)
       .attr('fill', d => getNodeColor(d))
       .attr('opacity', 0)
       .style('filter', 'blur(8px)');
@@ -214,16 +206,16 @@ function GraphView() {
     nodeGroups
       .append('circle')
       .attr('class', 'main-circle')
-      .attr('r', d => Math.max(18, d.connections * 3 + 18))
+      .attr('r', d => Math.max(7, d.connections * 1.5 + 7))
       .attr('fill', d => getNodeColor(d))
       .attr('stroke', '#fff')
-      .attr('stroke-width', 3)
+      .attr('stroke-width', 2)
       .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))');
 
     // Inner highlight (for depth)
     nodeGroups
       .append('circle')
-      .attr('r', d => Math.max(8, d.connections * 1.5 + 8))
+      .attr('r', d => Math.max(5, d.connections * 1 + 5))
       .attr('fill', 'white')
       .attr('opacity', 0.3);
 
@@ -232,24 +224,24 @@ function GraphView() {
       .filter(d => d.connections > 0)
       .append('circle')
       .attr('class', 'badge-circle')
-      .attr('r', 11)
-      .attr('fill', '#667eea')
+      .attr('r', 8)
+      .attr('fill', '#EC4899')
       .attr('stroke', '#fff')
-      .attr('stroke-width', 2.5)
-      .attr('cx', d => Math.max(18, d.connections * 3 + 18) * 0.65)
-      .attr('cy', d => -Math.max(18, d.connections * 3 + 18) * 0.65)
-      .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))');
+      .attr('stroke-width', 1.5)
+      .attr('cx', d => Math.max(7, d.connections * 1.5 + 7) * 0.7)
+      .attr('cy', d => -Math.max(7, d.connections * 1.5 + 7) * 0.7)
+      .style('filter', 'drop-shadow(0 1px 3px rgba(0,0,0,0.15))');
 
     nodeGroups
       .filter(d => d.connections > 0)
       .append('text')
       .attr('class', 'badge-text')
-      .attr('x', d => Math.max(18, d.connections * 3 + 18) * 0.65)
-      .attr('y', d => -Math.max(18, d.connections * 3 + 18) * 0.65)
+      .attr('x', d => Math.max(7, d.connections * 1.5 + 7) * 0.7)
+      .attr('y', d => -Math.max(7, d.connections * 1.5 + 7) * 0.7)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .attr('fill', '#fff')
-      .attr('font-size', '11px')
+      .attr('font-size', '9px')
       .attr('font-weight', 'bold')
       .style('pointer-events', 'none')
       .text(d => d.connections);
@@ -278,10 +270,10 @@ function GraphView() {
       .append('text')
       .attr('class', 'label-text')
       .attr('text-anchor', 'middle')
-      .attr('font-size', '13px')
+      .attr('font-size', '11px')
       .attr('font-weight', '600')
       .attr('fill', '#2D3748')
-      .text(d => d.title.length > 15 ? d.title.substring(0, 15) + '...' : d.title);
+      .text(d => d.title.length > 12 ? d.title.substring(0, 12) + '…' : d.title);
 
     labelGroups.each(function(d) {
       const text = d3.select(this).select('text').node();
@@ -304,7 +296,7 @@ function GraphView() {
       nodeGroups.attr('transform', d => `translate(${d.x},${d.y})`);
       
       labelGroups.attr('transform', d => {
-        const offset = Math.max(18, d.connections * 3 + 18) + 22;
+        const offset = Math.max(7, d.connections * 1.5 + 7) + 14;
         return `translate(${d.x},${d.y + offset})`;
       });
     });
@@ -499,7 +491,7 @@ function GraphView() {
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            Created {new Date(selectedNote.createdAt).toLocaleDateString('en-US', {
+            Created {parseDate(selectedNote.createdAt).toLocaleDateString('en-US', {
               month: 'short', 
               day: 'numeric', 
               year: 'numeric' 

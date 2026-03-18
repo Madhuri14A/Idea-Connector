@@ -25,7 +25,7 @@
 
 .search-input:focus {
   border-color: var(--primary);
-  background: white;
+  background: rgba(8, 14, 35, 0.92);
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
@@ -42,7 +42,7 @@
   border-radius: 8px;
   font-size: 0.95rem;
   cursor: pointer;
-  background-color: white;
+  background-color: rgba(8, 14, 35, 0.90);
   color: var(--text-primary);
   transition: all 0.2s ease;
   min-width: 140px;

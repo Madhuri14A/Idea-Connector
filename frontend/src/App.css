@@ -1,49 +1,49 @@
 :root {
-  /* ===== Unified Pink/Rose Theme ===== */
-  --accent: #EC4899;          /* Pink 500 — main color */
-  --accent-hover: #DB2777;    /* Pink 600 — hover */
-  --accent-deep: #BE185D;     /* Pink 700 — deep */
-  --accent-light: #FCE7F3;    /* Pink 100 — light bg */
-  --accent-soft: rgba(236, 72, 153, 0.12); /* soft tint */
+  /* ===== Dark Neon Cyan / Techno Theme ===== */
+  --accent: #00F0FF;
+  --accent-hover: #00D4E5;
+  --accent-deep: #0099AA;
+  --accent-light: rgba(0, 240, 255, 0.10);
+  --accent-soft: rgba(0, 240, 255, 0.10);
 
-  /* Aliases (used by older code) */
-  --primary: #EC4899;
-  --primary-hover: #DB2777;
-  --primary-light: #FCE7F3;
-  --secondary: #F472B6;       /* Pink 400 — lighter */
+  /* Aliases */
+  --primary: #00F0FF;
+  --primary-hover: #00D4E5;
+  --primary-light: rgba(0, 240, 255, 0.10);
+  --secondary: #7B61FF;
 
   /* Status */
-  --success: #10B981;
-  --warning: #F59E0B;
-  --error: #EF4444;
+  --success: #00FF88;
+  --warning: #FFD600;
+  --error: #FF4560;
 
-  /* ===== Glassmorphism ===== */
-  --glass: rgba(255, 255, 255, 0.68);
-  --glass-strong: rgba(255, 255, 255, 0.88);
-  --glass-border: rgba(255, 255, 255, 0.60);
-  --glass-shadow: 0 8px 32px rgba(236, 72, 153, 0.10), inset 0 1px 0 rgba(255,255,255,0.8);
+  /* ===== Dark Glassmorphism ===== */
+  --glass: rgba(8, 14, 35, 0.75);
+  --glass-strong: rgba(5, 10, 25, 0.92);
+  --glass-border: rgba(0, 240, 255, 0.18);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(0, 240, 255, 0.07);
 
   /* ===== Backgrounds ===== */
   --bg-main: transparent;
-  --bg-sidebar: rgba(255, 255, 255, 0.82);
-  --bg-card: rgba(255, 255, 255, 0.68);
-  --bg-hover: rgba(252, 231, 243, 0.55);
+  --bg-sidebar: rgba(5, 10, 25, 0.96);
+  --bg-card: rgba(8, 14, 35, 0.75);
+  --bg-hover: rgba(0, 240, 255, 0.06);
 
   /* ===== Text ===== */
-  --text-primary: #1F1235;
-  --text-secondary: #5C3D52;
-  --text-muted: #A07090;
-  --text-inverse: #FFFFFF;
+  --text-primary: #D0E8FF;
+  --text-secondary: #6890B0;
+  --text-muted: #3A5870;
+  --text-inverse: #070B14;
 
   /* ===== Borders ===== */
-  --border-color: rgba(236, 72, 153, 0.14);
-  --border-hover: rgba(236, 72, 153, 0.35);
+  --border-color: rgba(0, 240, 255, 0.12);
+  --border-hover: rgba(0, 240, 255, 0.40);
 
-  /* ===== Pink-tinted Shadows ===== */
-  --shadow-sm: 0 2px 8px rgba(236, 72, 153, 0.07);
-  --shadow-md: 0 4px 20px rgba(236, 72, 153, 0.12), 0 2px 6px rgba(0,0,0,0.04);
-  --shadow-lg: 0 8px 40px rgba(236, 72, 153, 0.16), 0 4px 10px rgba(0,0,0,0.05);
-  --shadow-xl: 0 16px 60px rgba(236, 72, 153, 0.20), 0 8px 16px rgba(0,0,0,0.06);
+  /* ===== Neon Shadows ===== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 240, 255, 0.07);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.65), 0 0 30px rgba(0, 240, 255, 0.10);
+  --shadow-xl: 0 16px 60px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 240, 255, 0.13);
 
   /* ===== Layout ===== */
   --sidebar-width: 260px;
@@ -56,7 +56,7 @@
   --tag-blockchain: #627EEA;
   --tag-go: #00ADD8;
   --tag-css: #1572B6;
-  --tag-default: #EC4899;
+  --tag-default: #00F0FF;
 }
 
 * {
@@ -71,14 +71,14 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
-  /* Beautiful fixed pink gradient background */
-  background-color: #FDE8F3;
+  /* Dark neon background — deep blue-black with glowing accents */
+  background-color: #070B14;
   background-image:
-    radial-gradient(ellipse 70% 55% at 8%  8%,  rgba(244, 63, 94,  0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 92% 92%,  rgba(236, 72, 153, 0.20) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 8%,   rgba(251, 113, 166,0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 45% 45% at 20% 88%,  rgba(253, 164, 175,0.16) 0%, transparent 55%),
-    radial-gradient(ellipse 35% 35% at 50% 50%,  rgba(252, 231, 243,0.40) 0%, transparent 70%);
+    radial-gradient(ellipse 80% 60% at 8%  5%,  rgba(15, 40, 140, 0.55) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 55% at 92% 92%,  rgba(90, 10, 160, 0.45) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 85% 8%,   rgba(0,  90, 180, 0.30) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 15% 85%,  rgba(0, 180, 220, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 35% at 50% 50%,  rgba(0,  20,  70, 0.70) 0%, transparent 70%);
   background-attachment: fixed;
 }
 
@@ -120,7 +120,7 @@ body {
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(236, 72, 153, 0.25);
+  border-color: rgba(0, 240, 255, 0.35);
 }
 
 /* Buttons */
@@ -140,13 +140,13 @@ body {
 
 .btn-primary {
   background: var(--accent);
-  color: white;
-  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35);
+  color: #070B14;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), 0 4px 14px rgba(0, 0, 0, 0.3);
 }
 
 .btn-primary:hover {
   background: var(--accent-hover);
-  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.45);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.6), 0 6px 20px rgba(0, 0, 0, 0.4);
   transform: translateY(-1px);
 }
 
@@ -158,8 +158,8 @@ body {
 }
 
 .btn-secondary:hover {
-  background: rgba(255,255,255,0.85);
-  border-color: rgba(236, 72, 153, 0.3);
+  background: rgba(8, 14, 35, 0.9);
+  border-color: rgba(0, 240, 255, 0.4);
   color: var(--accent);
 }
 
@@ -193,9 +193,9 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%   { box-shadow: 0 0 0 0   rgba(236, 72, 153, 0.4); }
-  70%  { box-shadow: 0 0 0 10px rgba(236, 72, 153, 0);  }
-  100% { box-shadow: 0 0 0 0   rgba(236, 72, 153, 0);   }
+  0%   { box-shadow: 0 0 0 0   rgba(0, 240, 255, 0.5); }
+  70%  { box-shadow: 0 0 0 12px rgba(0, 240, 255, 0);  }
+  100% { box-shadow: 0 0 0 0   rgba(0, 240, 255, 0);   }
 }
 
 @keyframes slideInRight {

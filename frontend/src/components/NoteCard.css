@@ -1,0 +1,130 @@
+.note-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light, rgba(99, 102, 241, 0.15));
+}
+
+.note-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: transparent;
+  transition: background-color 0.2s;
+}
+
+.note-card:hover::before {
+  background: var(--primary);
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.note-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.note-actions {
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.note-card:hover .note-actions {
+  opacity: 1;
+}
+
+.action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  color: var(--text-muted);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  background-color: var(--bg-hover);
+  color: var(--primary);
+}
+
+.action-btn.delete:hover {
+  color: var(--error);
+  background-color: var(--color-danger-bg, rgba(239, 68, 68, 0.1));
+}
+
+.note-preview {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.note-footer {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.note-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: var(--bg-main);
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.note-tag:hover {
+  background-color: var(--primary-light, rgba(99, 102, 241, 0.15));
+  color: var(--primary);
+  border-color: var(--primary-light, rgba(99, 102, 241, 0.15));
+}
+
+.note-tag-more {
+  background-color: var(--bg-hover);
+  color: var(--text-muted);
+}

@@ -14,6 +14,7 @@ router.post('/google', async (req, res) => {
   }
 
   try {
+    console.log('Verifying token...');
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID
@@ -22,6 +23,7 @@ router.post('/google', async (req, res) => {
     const payload = ticket.getPayload();
     const email = payload.email;
     const name = payload.name;
+    console.log('Token verified for:', email);
 
     const session = driver.session();
 

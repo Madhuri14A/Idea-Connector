@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { MenuIcon, SearchIcon, UserIcon, LogOutIcon } from './Icons';
 import './Navbar.css';
 
-function Navbar({ isAuthenticated, setIsAuthenticated }) {
+function Navbar({ isAuthenticated, setIsAuthenticated, toggleSidebar }) {
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -13,7 +14,11 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
     };
     const userData = localStorage.getItem('user');
     if (userData) {
-      setUser(JSON.parse(userData));
+      try {
+        setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error("Failed to parse user data", e);
+      }
     }
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -26,56 +31,49 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
     navigate('/');
   };
 
+  const handleSearchFocus = () => {
+    navigate('/notes');
+  };
+
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
-          <span className="logo-icon"></span>
-          Idea Connector
+    <header className={`top-header ${scrolled ? 'scrolled' : ''}`}>
+      <div className="header-left">
+        <button className="menu-toggle" onClick={toggleSidebar}>
+          <MenuIcon size={24} />
+        </button>
+        
+        <Link to="/" className="mobile-logo">
+          IdeaConnector
         </Link>
         
-        <ul className="nav-menu">
-          <li className="nav-item">
-            <NavLink to="/" className="nav-link" end>
-              <span className="nav-icon"></span>
-              Dashboard
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/notes" className="nav-link">
-              <span className="nav-icon"></span>
-              Notes
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink to="/graph" className="nav-link">
-              <span className="nav-icon"></span>
-              Graph
-            </NavLink>
-          </li>
-        </ul>
-
-        <div className="nav-actions">
-          {isAuthenticated ? (
-            <>
-              <Link to="/notes/new" className="btn-new-note">
-                New Note
-              </Link>
-              <div className="user-menu">
-                <span className="user-name">{user?.name}</span>
-                <button onClick={handleLogout} className="btn-logout">
-                  Logout
-                </button>
-              </div>
-            </>
-          ) : (
-            <Link to="/login" className="btn-login">
-              Sign In
-            </Link>
-          )}
-        </div>
+        {isAuthenticated && (
+          <div className="header-search">
+             <SearchIcon className="search-icon" size={18} />
+             <input 
+               type="text" 
+               placeholder="Search..." 
+               onFocus={handleSearchFocus}
+             />
+          </div>
+        )}
       </div>
-    </nav>
+
+      <div className="header-right">
+        {isAuthenticated ? (
+          <div className="user-mini-profile">
+             <div className="avatar-small">
+               {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={20} />}
+             </div>
+             <span className="user-name-small">{user?.name || 'User'}</span>
+             <button onClick={handleLogout} className="btn-icon-only" title="Logout" style={{background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', marginLeft: '0.5rem'}}>
+               <LogOutIcon size={18} />
+             </button>
+          </div>
+        ) : (
+          <Link to="/login" className="btn btn-primary btn-sm" style={{padding: '0.4rem 1rem'}}>Sign In</Link>
+        )}
+      </div>
+    </header>
   );
 }
 

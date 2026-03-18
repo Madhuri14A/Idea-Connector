@@ -4,7 +4,6 @@ const driver = require('../config/neo4j');
 
 const router = express.Router();
 
-// GET all notes
 router.get('/', async (req, res) => {
   const session = driver.session();
   try {
@@ -37,7 +36,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// SEARCH notes by title, content, or tags
 router.get('/search/query', async (req, res) => {
   const { q, tags, sort = 'recent' } = req.query;
   const session = driver.session();
@@ -82,13 +80,12 @@ router.get('/search/query', async (req, res) => {
   }
 });
 
-// GET related notes for a specific note
 router.get('/:id/related', async (req, res) => {
   const { id } = req.params;
   const session = driver.session();
   
   try {
-    // 1. Fetch the target note
+
     const targetResult = await session.run(
       `MATCH (n:Note) WHERE n.id = $id RETURN n`,
       { id }
@@ -99,20 +96,17 @@ router.get('/:id/related', async (req, res) => {
     }
     
     const targetNote = targetResult.records[0].get('n').properties;
-    
-    // 2. Fetch ALL other notes
+
     const allNotesResult = await session.run(
       `MATCH (n:Note) RETURN n`
     );
     
     const allNotes = allNotesResult.records.map(r => r.get('n').properties);
-    
-    // 3. Use findSimilarNotes from similarity.js
+
     const { findSimilarNotes } = require('../utils/similarity');
     
     const relatedNotes = findSimilarNotes(targetNote, allNotes, 0.08); // Threshold for short notes with tags
-    
-    // 4. Return top 5 with note details
+
     const topRelated = relatedNotes.slice(0, 5).map(({noteId, similarity}) => {
       const note = allNotes.find(n => n.id === noteId);
       return {
@@ -131,7 +125,6 @@ router.get('/:id/related', async (req, res) => {
   }
 });
 
-// GET single note by ID
 router.get('/:id', async (req, res) => {
   const session = driver.session();
   try {
@@ -161,7 +154,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// CREATE note
 router.post('/', async (req, res) => {
   const { title, content, tags = [] } = req.body;
   
@@ -214,7 +206,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// UPDATE note
 router.put('/:id', async (req, res) => {
   const { title, content, tags } = req.body;
   const session = driver.session();
@@ -244,7 +235,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE note
 router.delete('/:id', async (req, res) => {
   const session = driver.session();
   try {
@@ -268,20 +258,17 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// REBUILD ALL CONNECTIONS
 router.post('/rebuild/connections', async (req, res) => {
   const session = driver.session();
   try {
-    // Delete all existing relationships
+
     await session.run(`MATCH (n:Note)-[r:RELATES_TO]-(m:Note) DELETE r`);
-    
-    // Fetch all notes
+
     const allNotesResult = await session.run(`MATCH (n:Note) RETURN n`);
     const allNotes = allNotesResult.records.map(r => r.get('n').properties);
     
     const { findSimilarNotes } = require('../utils/similarity');
-    
-    // For each note, find similar ones and create connections
+
     for (let note of allNotes) {
       const similarNotes = findSimilarNotes(note, allNotes, 0.08);
       

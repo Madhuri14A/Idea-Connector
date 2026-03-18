@@ -4,50 +4,54 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #F5F4F0 0%, #FFFBEB 100%);
+  background: var(--bg-main);
+  background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 20%),
+                    radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 20%);
 }
 
 .login-card {
-  background: white;
-  padding: 60px 40px;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  background: var(--bg-card);
+  padding: 3rem 2.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-xl);
   text-align: center;
   max-width: 400px;
   width: 100%;
+  border: 1px solid var(--border-color);
 }
 
 .login-card h1 {
-  font-size: 32px;
-  color: #1A1A1A;
-  margin: 0 0 8px 0;
+  font-size: 2rem;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
   font-weight: 800;
 }
 
 .login-card .subtitle {
-  color: #4B5563;
-  font-size: 14px;
-  margin: 0 0 40px 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0 0 2rem 0;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .login-form h2 {
-  font-size: 18px;
-  color: #1A1A1A;
+  font-size: 1.1rem;
+  color: var(--text-primary);
   margin: 0;
   font-weight: 600;
 }
 
 .error-message {
-  background: #FEE2E2;
-  color: #DC2626;
-  padding: 12px;
+  background: #FEF2F2;
+  color: var(--error);
+  padding: 0.75rem;
   border-radius: 8px;
-  font-size: 14px;
-  margin-top: 16px;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  border: 1px solid #FECACA;
 }

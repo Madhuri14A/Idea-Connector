@@ -9,33 +9,29 @@ function GraphView() {
   const [hoveredNote, setHoveredNote] = useState(null);
   const [stats, setStats] = useState({ nodes: 0, connections: 0, clusters: 0 });
 
-  const tagColors = {
-    'react': '#fb61bdff',
-    'javascript': '#F7DF1E',
-    'node': '#339933',
-    'go': '#00ADD8',
-    'blockchain': '#627EEA',
-    'css': '#1572B6',
-    'python': '#3776AB',
-    'database': '#4ECDC4',
-    'api': '#FF6B6B',
-    'default': '#D97706'
-  };
+  // Better color palette - hand-picked for visual harmony
+  const colorPalette = [
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+    '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B195', '#C06C84',
+    '#6C5B7B', '#355C7D', '#F67280', '#C94B4B', '#A8E6CF',
+    '#FFD3B6', '#FFAAA5', '#FF8B94', '#FFDAC1', '#A8DADC'
+  ];
 
-  const hashToColor = (str) => {
+  // Hash function for consistent colors
+  const hashStringToIndex = (str) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
+      hash = hash & hash; // Convert to 32bit integer
     }
-    const hue = Math.abs(hash) % 360;
-    return `hsl(${hue}, 70%, 50%)`;
+    return Math.abs(hash) % colorPalette.length;
   };
 
   const getNodeColor = (note) => {
-    if (!note.id) return tagColors.default;
-    return hashToColor(note.id);
+    // Use note ID for consistent color per note
+    const colorIndex = hashStringToIndex(note.id);
+    return colorPalette[colorIndex];
   };
 
   useEffect(() => {
@@ -88,7 +84,6 @@ function GraphView() {
       });
     });
 
-    // Update stats
     setStats({
       nodes: nodes.length,
       connections: edges.length,
@@ -119,20 +114,29 @@ function GraphView() {
       .enter()
       .append('line')
       .attr('class', 'connection-line')
-      .attr('stroke', d => d.createdBy === 'auto' ? '#9CA3AF' : '#4B5563')
-      .attr('stroke-width', d => 2 + (d.strength * 4))
-      .attr('stroke-opacity', 0.6)
-      .attr('stroke-dasharray', d => d.createdBy === 'auto' ? '5,3' : 'none')
+      .attr('stroke', d => d.createdBy === 'auto' ? '#CBD5E0' : '#667eea')
+      .attr('stroke-width', d => {
+        const baseWidth = d.createdBy === 'auto' ? 2 : 3;
+        return baseWidth + (d.strength * 2);
+      })
+      .attr('stroke-opacity', 0.5)
+      .attr('stroke-dasharray', d => d.createdBy === 'auto' ? '6,4' : 'none')
       .style('cursor', 'pointer')
       .on('mouseenter', function(event, d) {
         d3.select(this)
-          .attr('stroke-opacity', 1)
-          .attr('stroke-width', d => 3 + (d.strength * 4));
+          .attr('stroke-opacity', 0.9)
+          .attr('stroke-width', d => {
+            const baseWidth = d.createdBy === 'auto' ? 2 : 3;
+            return baseWidth + (d.strength * 2) + 2;
+          });
       })
       .on('mouseleave', function(event, d) {
         d3.select(this)
-          .attr('stroke-opacity', 0.6)
-          .attr('stroke-width', d => 2 + (d.strength * 4));
+          .attr('stroke-opacity', 0.5)
+          .attr('stroke-width', d => {
+            const baseWidth = d.createdBy === 'auto' ? 2 : 3;
+            return baseWidth + (d.strength * 2);
+          });
       });
 
     const nodeGroup = svg.append('g').attr('class', 'nodes');
@@ -150,42 +154,45 @@ function GraphView() {
       .on('mouseenter', function(event, d) {
         setHoveredNote(d);
         
-        // Highlight this node
         d3.select(this).select('.main-circle')
           .transition()
           .duration(200)
-          .attr('r', d => Math.max(16, d.connections * 3 + 16) * 1.2)
+          .attr('r', d => Math.max(18, d.connections * 3 + 18) * 1.15)
           .attr('stroke-width', 4);
 
-        // Highlight connected lines
+        d3.select(this).select('.glow-circle')
+          .transition()
+          .duration(200)
+          .attr('opacity', 0.4);
+
         links.attr('stroke-opacity', link => {
-          return (link.source.id === d.id || link.target.id === d.id) ? 1 : 0.2;
+          return (link.source.id === d.id || link.target.id === d.id) ? 0.9 : 0.15;
         });
 
-        // Fade unconnected nodes
         nodeGroups.attr('opacity', node => {
           if (node.id === d.id) return 1;
           const isConnected = edges.some(e => 
             (e.source.id === d.id && e.target.id === node.id) ||
             (e.target.id === d.id && e.source.id === node.id)
           );
-          return isConnected ? 1 : 0.3;
+          return isConnected ? 1 : 0.25;
         });
       })
       .on('mouseleave', function(event, d) {
         setHoveredNote(null);
         
-        // Reset node
         d3.select(this).select('.main-circle')
           .transition()
           .duration(200)
-          .attr('r', d => Math.max(16, d.connections * 3 + 16))
+          .attr('r', d => Math.max(18, d.connections * 3 + 18))
           .attr('stroke-width', 3);
 
-        // Reset lines
-        links.attr('stroke-opacity', 0.6);
+        d3.select(this).select('.glow-circle')
+          .transition()
+          .duration(200)
+          .attr('opacity', 0);
 
-        // Reset all nodes
+        links.attr('stroke-opacity', 0.5);
         nodeGroups.attr('opacity', 1);
       })
       .call(d3.drag()
@@ -194,39 +201,60 @@ function GraphView() {
         .on('end', dragEnded)
       );
 
+    // Glow circle (only visible on hover)
+    nodeGroups
+      .append('circle')
+      .attr('class', 'glow-circle')
+      .attr('r', d => Math.max(18, d.connections * 3 + 18) + 8)
+      .attr('fill', d => getNodeColor(d))
+      .attr('opacity', 0)
+      .style('filter', 'blur(8px)');
+
+    // Main circle
     nodeGroups
       .append('circle')
       .attr('class', 'main-circle')
-      .attr('r', d => Math.max(16, d.connections * 3 + 16))
+      .attr('r', d => Math.max(18, d.connections * 3 + 18))
       .attr('fill', d => getNodeColor(d))
       .attr('stroke', '#fff')
-      .attr('stroke-width', 3);
+      .attr('stroke-width', 3)
+      .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))');
 
+    // Inner highlight (for depth)
+    nodeGroups
+      .append('circle')
+      .attr('r', d => Math.max(8, d.connections * 1.5 + 8))
+      .attr('fill', 'white')
+      .attr('opacity', 0.3);
+
+    // Connection count badge
     nodeGroups
       .filter(d => d.connections > 0)
       .append('circle')
       .attr('class', 'badge-circle')
-      .attr('r', 10)
-      .attr('fill', '#4f44efff')
+      .attr('r', 11)
+      .attr('fill', '#667eea')
       .attr('stroke', '#fff')
-      .attr('stroke-width', 2)
-      .attr('cx', d => Math.max(16, d.connections * 3 + 16) * 0.7)
-      .attr('cy', d => -Math.max(16, d.connections * 3 + 16) * 0.7);
+      .attr('stroke-width', 2.5)
+      .attr('cx', d => Math.max(18, d.connections * 3 + 18) * 0.65)
+      .attr('cy', d => -Math.max(18, d.connections * 3 + 18) * 0.65)
+      .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))');
 
     nodeGroups
       .filter(d => d.connections > 0)
       .append('text')
       .attr('class', 'badge-text')
-      .attr('x', d => Math.max(16, d.connections * 3 + 16) * 0.7)
-      .attr('y', d => -Math.max(16, d.connections * 3 + 16) * 0.7)
+      .attr('x', d => Math.max(18, d.connections * 3 + 18) * 0.65)
+      .attr('y', d => -Math.max(18, d.connections * 3 + 18) * 0.65)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .attr('fill', '#fff')
-      .attr('font-size', '10px')
+      .attr('font-size', '11px')
       .attr('font-weight', 'bold')
       .style('pointer-events', 'none')
       .text(d => d.connections);
 
+    // Labels
     const labelGroup = svg.append('g').attr('class', 'labels');
 
     const labelGroups = labelGroup
@@ -239,19 +267,20 @@ function GraphView() {
     labelGroups
       .append('rect')
       .attr('class', 'label-bg')
-      .attr('rx', 4)
-      .attr('ry', 4)
-      .attr('fill', '#fff')
-      .attr('stroke', '#E5E7EB')
-      .attr('stroke-width', 1);
+      .attr('rx', 6)
+      .attr('ry', 6)
+      .attr('fill', 'rgba(255, 255, 255, 0.95)')
+      .attr('stroke', '#E2E8F0')
+      .attr('stroke-width', 1)
+      .style('filter', 'drop-shadow(0 1px 2px rgba(0,0,0,0.05))');
 
     const labelTexts = labelGroups
       .append('text')
       .attr('class', 'label-text')
       .attr('text-anchor', 'middle')
-      .attr('font-size', '12px')
+      .attr('font-size', '13px')
       .attr('font-weight', '600')
-      .attr('fill', '#1F2937')
+      .attr('fill', '#2D3748')
       .text(d => d.title.length > 15 ? d.title.substring(0, 15) + '...' : d.title);
 
     labelGroups.each(function(d) {
@@ -259,10 +288,10 @@ function GraphView() {
       const bbox = text.getBBox();
       
       d3.select(this).select('rect')
-        .attr('x', bbox.x - 6)
-        .attr('y', bbox.y - 2)
-        .attr('width', bbox.width + 12)
-        .attr('height', bbox.height + 4);
+        .attr('x', bbox.x - 8)
+        .attr('y', bbox.y - 3)
+        .attr('width', bbox.width + 16)
+        .attr('height', bbox.height + 6);
     });
 
     simulation.on('tick', () => {
@@ -275,7 +304,7 @@ function GraphView() {
       nodeGroups.attr('transform', d => `translate(${d.x},${d.y})`);
       
       labelGroups.attr('transform', d => {
-        const offset = Math.max(16, d.connections * 3 + 16) + 18;
+        const offset = Math.max(18, d.connections * 3 + 18) + 22;
         return `translate(${d.x},${d.y + offset})`;
       });
     });
@@ -300,19 +329,24 @@ function GraphView() {
 
   return (
     <div className="graph-view">
-      {/* Header with stats */}
+      {/* Header */}
       <div className="graph-header">
         <div className="header-content">
-          <h1>Knowledge Graph</h1>
+          <div className="header-title">
+            <h1>Knowledge Graph</h1>
+            <p className="header-subtitle">Visualize connections between your ideas</p>
+          </div>
           <div className="graph-stats">
             <div className="stat-item">
               <span className="stat-value">{stats.nodes}</span>
               <span className="stat-label">Notes</span>
             </div>
+            <div className="stat-divider"></div>
             <div className="stat-item">
               <span className="stat-value">{stats.connections}</span>
-              <span className="stat-label">Connections</span>
+              <span className="stat-label">Links</span>
             </div>
+            <div className="stat-divider"></div>
             <div className="stat-item">
               <span className="stat-value">{stats.clusters}</span>
               <span className="stat-label">Topics</span>
@@ -320,83 +354,122 @@ function GraphView() {
           </div>
         </div>
         <button onClick={() => fetchAndRender()} className="btn-refresh">
-           Refresh
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          Refresh
         </button>
-      </div>
-
-      {/* Legend */}
-      <div className="graph-legend-top">
-        <div className="legend-section">
-          <h4>Visual Guide:</h4>
-          <div className="legend-items-inline">
-            <div className="legend-item-inline">
-              <div className="legend-example">
-                <svg width="40" height="20">
-                  <circle cx="10" cy="10" r="8" fill="#D97706" stroke="#fff" strokeWidth="2"/>
-                  <circle cx="10" cy="10" r="3" fill="#EF4444"/>
-                </svg>
-              </div>
-              <span>Size = connections</span>
-            </div>
-            <div className="legend-item-inline">
-              <div className="legend-example">
-                <svg width="40" height="20">
-                  <line x1="0" y1="10" x2="40" y2="10" stroke="#4B5563" strokeWidth="3"/>
-                </svg>
-              </div>
-              <span>Thick = strong link</span>
-            </div>
-            <div className="legend-item-inline">
-              <div className="legend-example">
-                <svg width="40" height="20">
-                  <line x1="0" y1="10" x2="40" y2="10" stroke="#9CA3AF" strokeWidth="2" strokeDasharray="5,3"/>
-                </svg>
-              </div>
-              <span>Dashed = AI suggested</span>
-            </div>
-           
-          </div>
-        </div>
       </div>
 
       {/* Hover info */}
       {hoveredNote && (
         <div className="hover-info">
-          <strong>{hoveredNote.title}</strong>
+          <div className="hover-header">
+            <div 
+              className="hover-color-indicator" 
+              style={{ background: getNodeColor(hoveredNote) }}
+            />
+            <strong>{hoveredNote.title}</strong>
+          </div>
           <div className="hover-meta">
-            {hoveredNote.connections} connection{hoveredNote.connections !== 1 ? 's' : ''}
+            <span className="hover-meta-item">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+              </svg>
+              {hoveredNote.connections} connection{hoveredNote.connections !== 1 ? 's' : ''}
+            </span>
             {hoveredNote.tags.length > 0 && (
-              <> • {hoveredNote.tags.slice(0, 2).map(t => `#${t}`).join(', ')}</>
+              <span className="hover-meta-item">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                {hoveredNote.tags.slice(0, 2).map(t => `#${t}`).join(', ')}
+              </span>
             )}
           </div>
         </div>
       )}
 
-      {/* Graph canvas */}
-      <div className="graph-container">
-        <svg 
-          ref={svgRef} 
-          style={{ 
-            width: '100%', 
-            height: '700px', 
-            background: '#FFFFFF',
-            borderRadius: '12px',
-            border: '2px solid #FFD700'
-          }}
-        />
+      {/* Visual Guide */}
+      <div className="guide-panel">
+        <div className="guide-title">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Graph Guide
+        </div>
+        <div className="guide-items">
+          <div className="guide-item">
+            <div className="guide-visual">
+              <svg width="40" height="24">
+                <circle cx="12" cy="12" r="10" fill={colorPalette[0]} opacity="0.9" stroke="#fff" strokeWidth="2"/>
+                <circle cx="28" cy="12" r="6" fill={colorPalette[1]} opacity="0.9" stroke="#fff" strokeWidth="2"/>
+              </svg>
+            </div>
+            <span>Size = Connection count</span>
+          </div>
+          <div className="guide-item">
+            <div className="guide-visual">
+              <svg width="40" height="24">
+                <line x1="4" y1="12" x2="36" y2="12" stroke="#667eea" strokeWidth="3" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <span>Solid = Manual link</span>
+          </div>
+          <div className="guide-item">
+            <div className="guide-visual">
+              <div style={{ 
+                width: 20, 
+                height: 20, 
+                borderRadius: '50%', 
+                background: 'linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #FFA07A 75%, #98D8C8 100%)',
+                margin: '2px 10px'
+              }}></div>
+            </div>
+            <span>Each note = Unique color</span>
+          </div>
+        </div>
       </div>
 
-      {/* Selected note sidebar */}
+      {/* Graph canvas */}
+      <div className="graph-canvas-wrapper">
+        <svg 
+          ref={svgRef} 
+          className="graph-canvas"
+        />
+
+        {/* Empty state overlay inside canvas */}
+        {stats.nodes === 0 && (
+          <div className="graph-empty">
+            <div className="empty-icon">🕸️</div>
+            <h3>No notes in your graph yet</h3>
+            <p>Create notes and connect them to visualize your knowledge network</p>
+          </div>
+        )}
+      </div>
+
+      {/* Sidebar */}
       {selectedNote && (
         <div className="note-sidebar">
           <button className="close-btn" onClick={() => setSelectedNote(null)}>
-            ✕
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
           
           <div className="sidebar-header">
+            <div 
+              className="sidebar-color-bar" 
+              style={{ background: getNodeColor(selectedNote) }}
+            />
             <h3>{selectedNote.title}</h3>
-            <div className="connection-badge">
-              {selectedNote.connections} connection{selectedNote.connections !== 1 ? 's' : ''}
+            <div className="sidebar-badges">
+              <div className="connection-badge">
+                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                {selectedNote.connections} link{selectedNote.connections !== 1 ? 's' : ''}
+              </div>
             </div>
           </div>
 
@@ -406,18 +479,15 @@ function GraphView() {
 
           {selectedNote.tags.length > 0 && (
             <div className="sidebar-tags">
-              <h4>Tags:</h4>
+              <h4>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                Tags
+              </h4>
               <div className="tags">
                 {selectedNote.tags.map(tag => (
-                  <span 
-                    key={tag} 
-                    className="tag"
-                    style={{
-                      backgroundColor: (tagColors[tag.toLowerCase()] || tagColors.default) + '20',
-                      color: tagColors[tag.toLowerCase()] || tagColors.default,
-                      border: `1px solid ${tagColors[tag.toLowerCase()] || tagColors.default}`
-                    }}
-                  >
+                  <span key={tag} className="tag">
                     #{tag}
                   </span>
                 ))}
@@ -426,19 +496,18 @@ function GraphView() {
           )}
 
           <div className="sidebar-meta">
-            <small>Created: {new Date(selectedNote.createdAt).toLocaleDateString()}</small>
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Created {new Date(selectedNote.createdAt).toLocaleDateString('en-US', {
+              month: 'short', 
+              day: 'numeric', 
+              year: 'numeric' 
+            })}
           </div>
         </div>
       )}
 
-      {/* Empty state */}
-      {stats.nodes === 0 && (
-        <div className="graph-empty">
-          <div className="empty-icon">🕸️</div>
-          <h3>No notes yet</h3>
-          <p>Create some notes and connect them to see your knowledge graph!</p>
-        </div>
-      )}
     </div>
   );
 }

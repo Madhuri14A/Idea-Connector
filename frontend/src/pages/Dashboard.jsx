@@ -10,11 +10,6 @@ function Dashboard() {
   const [greeting, setGreeting] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setGreeting(getGreeting());
-    fetchData();
-  }, []);
-
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -22,7 +17,15 @@ function Dashboard() {
     return 'Good evening';
   };
 
+  // Authentication status
+  const isAuthenticated = !!localStorage.getItem('token');
+
   const fetchData = async () => {
+    if (!isAuthenticated) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       const notesRes = await getNotes();
       const allNotes = notesRes.data;
@@ -43,6 +46,11 @@ function Dashboard() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    setGreeting(getGreeting());
+    fetchData();
+  }, []);
 
   const getTimeAgo = (dateString) => {
     const date = new Date(dateString);
@@ -86,7 +94,7 @@ function Dashboard() {
   return (
     <div className="dashboard">
       {/* Hero Section */}
-      <div className="hero-section">
+      <div className="dashboard-hero">
         <div className="hero-text">
           <h1>{greeting}!</h1>
           <p className="subtitle">
@@ -117,13 +125,13 @@ function Dashboard() {
           <div className="stat-trend">+{stats.totalConnections > 0 ? '8%' : '0%'}</div>
         </div>
 
-        <div className="stat-card coming-soon">
+        <div className="stat-card" onClick={() => navigate('/ideas')}>
           <div className="stat-icon">💡</div>
           <div className="stat-content">
-            <h3>Coming Soon</h3>
-            <p>AI Ideas</p>
+            <h3>Ideas</h3>
+            <p>AI Generator</p>
           </div>
-          <div className="stat-badge">Week 5</div>
+          <div className="stat-trend">→</div>
         </div>
       </div>
 
@@ -170,98 +178,93 @@ function Dashboard() {
       <div className="recent-section">
         <div className="section-header">
           <h2 className="section-title">Recent Notes</h2>
-          <Link to="/notes" className="view-all">
-            View All →
-          </Link>
+          {isAuthenticated && (
+            <Link to="/notes" className="view-all">
+              View All →
+            </Link>
+          )}
         </div>
 
-        {notes.length > 0 ? (
-          <div className="notes-list">
-            {notes.map(note => (
-              <div 
-                key={note.id} 
-                className="note-card-modern"
-                onClick={() => navigate(`/notes/${note.id}`)}
-              >
-                <div className="note-header">
-                  <div 
-                    className="note-indicator"
-                    style={{ backgroundColor: getTagColor(note.tags?.[0]) }}
-                  ></div>
-                  <h3>{note.title}</h3>
-                </div>
-                
-                <p className="note-content">
-                  {note.content.substring(0, 120)}
-                  {note.content.length > 120 && '...'}
-                </p>
-                
-                <div className="note-footer">
-                  <div className="note-tags">
-                    {note.tags?.slice(0, 3).map(tag => (
-                      <span 
-                        key={tag} 
-                        className="tag-pill"
-                        style={{ 
-                          backgroundColor: getTagColor(tag) + '20',
-                          color: getTagColor(tag)
-                        }}
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                    {note.tags?.length > 3 && (
-                      <span className="tag-more">+{note.tags.length - 3}</span>
-                    )}
+        {isAuthenticated ? (
+          notes.length > 0 ? (
+            <div className="notes-list">
+              {notes.map(note => (
+                <div 
+                  key={note.id} 
+                  className="note-card-modern"
+                  onClick={() => navigate(`/notes/${note.id}`)}
+                >
+                  <div className="note-header">
+                    <div 
+                      className="note-indicator"
+                      style={{ backgroundColor: getTagColor(note.tags?.[0]) }}
+                    ></div>
+                    <h3>{note.title}</h3>
                   </div>
                   
-                  <div className="note-meta">
-                    {note.connections?.length > 0 && (
-                      <span className="connection-count">
-                        🔗 {note.connections.length}
+                  <p className="note-content">
+                    {note.content.substring(0, 120)}
+                    {note.content.length > 120 && '...'}
+                  </p>
+                  
+                  <div className="note-footer">
+                    <div className="note-tags">
+                      {note.tags?.slice(0, 3).map(tag => (
+                        <span 
+                          key={tag} 
+                          className="tag-pill"
+                          style={{ 
+                            backgroundColor: getTagColor(tag) + '20',
+                            color: getTagColor(tag)
+                          }}
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                      {note.tags?.length > 3 && (
+                        <span className="tag-more">+{note.tags.length - 3}</span>
+                      )}
+                    </div>
+                    
+                    <div className="note-meta">
+                      <span className="note-time">
+                        {getTimeAgo(note.createdAt)}
                       </span>
-                    )}
-                    <span className="note-time">
-                      {getTimeAgo(note.createdAt)}
-                    </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <div className="empty-icon">📝</div>
+              <h3>No notes yet</h3>
+              <p>Start building your knowledge base</p>
+              <button 
+                className="btn-primary"
+                onClick={() => navigate('/notes/new')}
+              >
+                Create Your First Note
+              </button>
+            </div>
+          )
         ) : (
           <div className="empty-state">
-            <div className="empty-icon">📝</div>
-            <h3>No notes yet</h3>
-            <p>Start building your knowledge base</p>
+            <div className="empty-icon">🔒</div>
+            <h3>Please Log In</h3>
+            <p>You need to be logged in to view your recent notes and create a knowledge base.</p>
             <button 
               className="btn-primary"
-              onClick={() => navigate('/notes/new')}
+              onClick={() => navigate('/login')}
+              style={{ padding: '0.75rem 2rem', marginTop: '1rem' }}
             >
-              Create Your First Note
+              Log In Now
             </button>
           </div>
         )}
       </div>
 
-      {/* AI Suggestions Preview */}
-      <div className="suggestions-preview">
-        <div className="section-header">
-          <h2 className="section-title">AI Suggestions</h2>
-          <Link to="/notes" className="view-all">
-            Coming Soon →
-          </Link>
-        </div>
-        
-        <div className="suggestion-card coming-soon-banner">
-          <div className="suggestion-icon">🔮</div>
-          <div className="suggestion-content">
-            <h4>AI-Powered Connections</h4>
-            <p>Coming in Week 5! The AI will analyze your notes and suggest meaningful connections and project ideas.</p>
-          </div>
-          <div className="suggestion-badge">Soon</div>
-        </div>
-      </div>
+
     </div>
   );
 }

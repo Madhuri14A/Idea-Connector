@@ -15,9 +15,8 @@ app.get('/api/health', (req, res) => {
 
 app.use('/auth', require('../routes/auth'));
 app.use('/api/notes', authMiddleware, require('../routes/notes'));
-// app.use('/api/connections', require('../routes/connections'));
-// app.use('/api/search', require('../routes/search'));
-// app.use('/api/suggestions', require('../routes/suggestions'));
+app.use('/api/ideas', authMiddleware, require('../routes/ideas'));
+app.use('/api/weaver', authMiddleware, require('../routes/weaver'));
 
 const PORT = process.env.PORT || 5000;
 
@@ -25,7 +24,6 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// Graceful shutdown
 process.on('SIGINT', async () => {
   await driver.close();
   process.exit(0);

@@ -15,12 +15,24 @@
   align-items: center;
   margin-bottom: 2rem;
   padding: 2.5rem;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+  background: linear-gradient(135deg, #001E2B 0%, #002D3D 40%, #001820 100%);
   border-radius: var(--border-radius);
   color: white;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.18);
   position: relative;
   overflow: hidden;
+}
+
+.dashboard-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.7), transparent);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
 .dashboard-hero::after {
@@ -30,7 +42,7 @@
   top: 0;
   width: 300px;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(0, 240, 255, 0.07) 0%, transparent 70%);
   border-radius: 50%;
   transform: translate(20%, -20%);
 }
@@ -199,14 +211,16 @@
 }
 
 .action-btn.primary {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
+  background: linear-gradient(135deg, #001E2B 0%, #002D3D 100%);
+  color: var(--text-primary);
+  border-color: rgba(0, 240, 255, 0.30);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.06);
 }
 
 .action-btn.primary .action-icon {
-  background: rgba(0, 240, 255, 0.05);
-  color: white;
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--accent);
+  border-color: rgba(0, 240, 255, 0.15);
 }
 
 .action-btn.secondary {
@@ -226,7 +240,9 @@
 }
 
 .action-btn.primary:hover {
-  background: var(--accent-hover);
+  background: linear-gradient(135deg, #002D3D 0%, #003B4D 100%);
+  border-color: rgba(0, 240, 255, 0.50);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.10);
 }
 
 .action-icon {
@@ -297,7 +313,7 @@
   height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.5);
+  box-shadow: 0 0 6px currentColor;
 }
 
 .note-header h3 {

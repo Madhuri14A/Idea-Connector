@@ -15,7 +15,7 @@
   align-items: center;
   margin-bottom: 2rem;
   padding: 2.5rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
   border-radius: var(--border-radius);
   color: white;
   box-shadow: var(--shadow-lg);
@@ -87,7 +87,7 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: var(--primary);
+  background: var(--accent);
   transform: scaleY(0);
   transition: transform 0.2s;
 }
@@ -95,7 +95,7 @@
 .stat-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
-  border-color: var(--primary-light);
+  border-color: #FDE2E9;
 }
 
 .stat-card:hover::before {
@@ -194,9 +194,9 @@
 }
 
 .action-btn.primary {
-  background: var(--primary);
+  background: var(--accent);
   color: white;
-  border-color: var(--primary);
+  border-color: var(--accent);
 }
 
 .action-btn.primary .action-icon {
@@ -217,11 +217,11 @@
 .action-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: var(--primary-light);
+  border-color: var(--accent-hover);
 }
 
 .action-btn.primary:hover {
-  background: var(--primary-hover);
+  background: var(--accent-hover);
 }
 
 .action-icon {

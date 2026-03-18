@@ -52,8 +52,8 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px #FDE2E9;
   background-color: white;
 }
 
@@ -74,14 +74,15 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: var(--accent);
   color: white;
-  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3);
 }
 
 .btn-primary:hover {
+  background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.4);
 }
 
 .btn-primary:disabled {

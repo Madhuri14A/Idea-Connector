@@ -1,0 +1,79 @@
+.error-boundary-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-main);
+}
+
+.error-boundary-card {
+  background: var(--bg-card);
+  padding: 3rem 2.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  border: 1px solid var(--border-color);
+}
+
+.error-boundary-card h1 {
+  color: var(--error);
+  font-size: 1.8rem;
+  margin: 0 0 1rem 0;
+  font-weight: 800;
+}
+
+.error-message {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.error-details {
+  background: var(--bg-hover);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.error-details summary {
+  color: var(--text-primary);
+  font-weight: 600;
+  user-select: none;
+  padding: 0.5rem;
+}
+
+.error-details pre {
+  background: var(--bg-main);
+  padding: 0.75rem;
+  border-radius: 0.4rem;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  color: var(--error);
+  margin: 0.75rem 0 0 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.error-reset-btn {
+  padding: 0.75rem 2rem;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.error-reset-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}

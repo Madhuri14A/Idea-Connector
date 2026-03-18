@@ -1,12 +1,13 @@
 :root {
-  /* Modern Creative Theme - Indigo/Violet */
+  /* Modern Creative Theme - Indigo/Pink */
   --primary: #6366F1;       /* Indigo 500 */
   --primary-hover: #4F46E5; /* Indigo 600 */
   --primary-light: #E0E7FF; /* Indigo 100 */
   
   /* Secondary & Accents */
   --secondary: #8B5CF6;     /* Violet 500 */
-  --accent: #EC4899;        /* Pink 500 */
+  --accent: #EC4899;        /* Pink 500 - PRIMARY ACCENT */
+  --accent-hover: #DB2777;  /* Pink 600 - Hover state */
   --success: #10B981;       /* Emerald 500 */
   --warning: #F59E0B;       /* Amber 500 */
   --error: #EF4444;         /* Red 500 */
@@ -111,15 +112,15 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: var(--accent);
   color: white;
-  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.3);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+  background: var(--accent-hover);
+  box-shadow: 0 10px 15px -3px rgba(236, 72, 153, 0.4);
   transform: translateY(-1px);
-  opacity: 0.95;
 }
 
 .btn-secondary {

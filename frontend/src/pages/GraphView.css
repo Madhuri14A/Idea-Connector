@@ -490,6 +490,6 @@
 
 @keyframes pulse-guide {
   0% { transform: scale(1); }
-  50% { transform: scale(1.1); color: var(--secondary); }
+  50% { transform: scale(1.1); color: var(--accent); }
   100% { transform: scale(1); }
 }

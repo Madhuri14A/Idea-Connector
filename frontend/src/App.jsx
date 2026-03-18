@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import './App.css';
+import ErrorBoundary from './components/ErrorBoundary';
 import GraphView from './pages/GraphView';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -11,6 +12,7 @@ import AddNote from './pages/AddNote';
 import NoteDetail from './pages/NoteDetail';
 import Ideas from './pages/Ideas';
 import Login from './pages/Login';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -61,20 +63,23 @@ function App() {
               toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             />
             
-            <div className="content-wrapper">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/notes" element={<NotesList />} />
-                <Route 
-                  path="/notes/new" 
-                  element={isAuthenticated ? <AddNote /> : <Login redirectTo="/notes/new" />} 
-                />
-                <Route path="/notes/:id" element={<NoteDetail />} />
-                <Route path="/graph" element={<GraphView />} />
-                <Route path="/ideas" element={isAuthenticated ? <Ideas /> : <Login redirectTo="/ideas" />} />
-                <Route path="/login" element={<Login />} />
-              </Routes>
-            </div>
+            <ErrorBoundary>
+              <div className="content-wrapper">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/notes" element={<NotesList />} />
+                  <Route 
+                    path="/notes/new" 
+                    element={isAuthenticated ? <AddNote /> : <Login redirectTo="/notes/new" />} 
+                  />
+                  <Route path="/notes/:id" element={<NoteDetail />} />
+                  <Route path="/graph" element={<GraphView />} />
+                  <Route path="/ideas" element={isAuthenticated ? <Ideas /> : <Login redirectTo="/ideas" />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                </Routes>
+              </div>
+            </ErrorBoundary>
           </div>
         </div>
       </Router>

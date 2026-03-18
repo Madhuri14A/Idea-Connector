@@ -6,7 +6,28 @@ const authMiddleware = require('../middleware/auth');
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:5173',
+      process.env.CORS_ORIGIN
+    ].filter(Boolean);
+    
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS not allowed'));
+    }
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get('/api/health', (req, res) => {

@@ -12,8 +12,7 @@ router.get('/generate', async (req, res) => {
 
     const result = await session.run(`
       MATCH (u:User {email: $userId})
-      MATCH (n:Note)
-      WHERE (u)-[:CREATED]->(n) OR NOT (n)<-[:CREATED]-()
+      MATCH (u)-[:CREATED]->(n:Note)
       OPTIONAL MATCH (n)-[r:RELATES_TO]-(c:Note)
       RETURN n, collect({note: c, strength: r.strength}) as connections
       ORDER BY n.createdAt DESC

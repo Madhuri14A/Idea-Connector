@@ -17,11 +17,13 @@
 }
 
 .note-content {
-  background: var(--bg-card);
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   padding: 2.5rem;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
 }
 
 .note-content h1 {
@@ -47,13 +49,13 @@
 }
 
 .tag {
-  background: var(--bg-main);
-  color: var(--text-secondary);
+  background: rgba(236, 72, 153, 0.09);
+  color: var(--accent);
   padding: 0.35rem 0.85rem;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(236, 72, 153, 0.18);
 }
 
 .content {
@@ -72,23 +74,32 @@
 .title-input {
   font-size: 1.5rem;
   padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid rgba(236, 72, 153, 0.18);
+  border-radius: 10px;
   font-weight: bold;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text-primary);
 }
 
 .content-textarea {
   padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid rgba(236, 72, 153, 0.18);
+  border-radius: 10px;
   font-family: monospace;
   resize: vertical;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text-primary);
 }
 
 .tags-input {
   padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid rgba(236, 72, 153, 0.18);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(8px);
+  color: var(--text-primary);
 }
 
 .form-actions {

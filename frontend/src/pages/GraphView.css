@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  background: transparent;
 }
 
 /* Header */
@@ -12,10 +12,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: white;
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 1.75rem 2rem;
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
   flex-wrap: wrap;
   gap: 1.5rem;
 }
@@ -31,14 +34,14 @@
   margin: 0;
   font-size: 1.75rem;
   font-weight: 800;
-  color: #1a202c;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
 }
 
 .header-subtitle {
   margin: 0.25rem 0 0 0;
   font-size: 0.875rem;
-  color: #718096;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -57,7 +60,7 @@
 .stat-value {
   font-size: 2rem;
   font-weight: 800;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -66,7 +69,7 @@
 
 .stat-label {
   font-size: 0.75rem;
-  color: #a0aec0;
+  color: var(--text-muted);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
@@ -76,12 +79,12 @@
 .stat-divider {
   width: 1px;
   height: 40px;
-  background: #e2e8f0;
+  background: var(--border-color);
 }
 
 .btn-refresh {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--accent);
   color: white;
   border: none;
   border-radius: 12px;
@@ -92,12 +95,13 @@
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35);
 }
 
 .btn-refresh:hover {
+  background: var(--accent-hover);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.45);
 }
 
 .btn-refresh:active {
@@ -107,10 +111,13 @@
 /* Graph Canvas */
 .graph-canvas-wrapper {
   position: relative;
-  background: white;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
 }
 
 .graph-canvas {

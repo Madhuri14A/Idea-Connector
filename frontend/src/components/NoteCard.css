@@ -1,20 +1,23 @@
 .note-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border: 1px solid var(--glass-border);
   border-radius: var(--border-radius);
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--glass-shadow);
 }
 
 .note-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
-  border-color: var(--primary-light, rgba(99, 102, 241, 0.15));
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(236, 72, 153, 0.3);
 }
 
 .note-card::before {
@@ -25,11 +28,11 @@
   width: 4px;
   height: 100%;
   background: transparent;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s;
 }
 
 .note-card:hover::before {
-  background: var(--primary);
+  background: var(--accent);
 }
 
 .note-header {
@@ -77,8 +80,8 @@
 }
 
 .action-btn:hover {
-  background-color: var(--bg-hover);
-  color: var(--primary);
+  background-color: rgba(236, 72, 153, 0.08);
+  color: var(--accent);
 }
 
 .action-btn.delete:hover {
@@ -112,19 +115,19 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
-  background-color: var(--bg-main);
-  color: var(--text-secondary);
-  border: 1px solid transparent;
+  background: rgba(236, 72, 153, 0.08);
+  color: var(--accent);
+  border: 1px solid rgba(236, 72, 153, 0.15);
   transition: all 0.2s;
 }
 
 .note-tag:hover {
-  background-color: var(--primary-light, rgba(99, 102, 241, 0.15));
-  color: var(--primary);
-  border-color: var(--primary-light, rgba(99, 102, 241, 0.15));
+  background: rgba(236, 72, 153, 0.15);
+  color: var(--accent-hover);
+  border-color: rgba(236, 72, 153, 0.3);
 }
 
 .note-tag-more {
-  background-color: var(--bg-hover);
+  background: rgba(255,255,255,0.5);
   color: var(--text-muted);
 }

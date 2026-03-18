@@ -16,11 +16,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-main) 100%);
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 2rem;
   border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
   flex-wrap: wrap;
   gap: 1.5rem;
 }
@@ -80,11 +82,13 @@
 
 /* Tools Section (Search) */
 .notes-tools-section {
-  background: var(--bg-card);
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 /* Modern Grid */

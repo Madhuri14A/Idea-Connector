@@ -7,6 +7,14 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   const session = driver.session();
   try {
+    // Migrate any orphan notes (created before user system) to the current user
+    await session.run(
+      `MATCH (u:User {email: $userId})
+       MATCH (n:Note) WHERE NOT (n)<-[:CREATED]-()
+       CREATE (u)-[:CREATED]->(n)`,
+      { userId: req.userId }
+    );
+
     const result = await session.run(
       `MATCH (u:User {email: $userId})
        MATCH (u)-[:CREATED]->(n:Note)

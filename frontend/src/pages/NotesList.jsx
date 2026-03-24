@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getNotes, deleteNote, searchNotes } from '../utils/api';
 import SearchBar from '../components/SearchBar';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,24 +9,27 @@ import NoteCard from '../components/NoteCard';
 function NotesList() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
   const [searchParams, setSearchParams] = useState({ q: '', tags: '', sort: 'recent' });
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchNotes();
-  }, []);
+    const timer = setTimeout(() => {
+      const { q, tags, sort } = searchParams;
+      if (q || tags || sort !== 'recent') {
+        performSearch(searchParams);
+      } else {
+        fetchNotes();
+      }
+    }, 300);
 
-  useEffect(() => {
-    if (searchParams.q || searchParams.tags || searchParams.sort !== 'recent') {
-      performSearch();
-    } else {
-      fetchNotes();
-    }
+    return () => clearTimeout(timer);
   }, [searchParams]);
 
   const fetchNotes = async () => {
     try {
+      setLoading(true);
       const res = await getNotes();
       setNotes(res.data);
     } catch (error) {
@@ -36,31 +39,29 @@ function NotesList() {
     }
   };
 
-  const performSearch = async () => {
+  const performSearch = async ({ q, tags, sort }) => {
     try {
-      setLoading(true);
-      const res = await searchNotes(searchParams.q, searchParams.tags, searchParams.sort);
+      setSearching(true);
+      const res = await searchNotes(q, tags, sort);
       setNotes(res.data);
     } catch (error) {
       console.error('Error searching notes:', error);
       setNotes([]);
     } finally {
-      setLoading(false);
+      setSearching(false);
     }
   };
 
-  const handleSearch = useCallback((params) => {
+  const handleSearch = (params) => {
     setSearchParams(params);
-  }, []);
+  };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Delete this note?')) {
-      try {
-        await deleteNote(id);
-        setNotes(notes.filter(note => note.id !== id));
-      } catch (error) {
-        console.error('Error deleting note:', error);
-      }
+    try {
+      await deleteNote(id);
+      setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
+    } catch (error) {
+      console.error('Error deleting note:', error);
     }
   };
 
@@ -73,7 +74,6 @@ function NotesList() {
 
   return (
     <div className="notes-page-container">
-      {/* Page Header */}
       <div className="notes-page-header">
         <div className="header-title-section">
           <div className="header-icon-wrapper">
@@ -91,12 +91,11 @@ function NotesList() {
         </Link>
       </div>
 
-      {/* Tools Section (Search & Filter) */}
       <div className="notes-tools-section">
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} searchParams={searchParams} />
+        {searching && <p className="subtitle">Searching...</p>}
       </div>
       
-      {/* Content Grid */}
       <div className="notes-content">
         {notes.length > 0 ? (
           <div className="modern-notes-grid">
@@ -106,6 +105,7 @@ function NotesList() {
                 note={note}
                 onDelete={handleDelete}
                 onView={() => navigate(`/notes/${note.id}`)}
+                isPendingDelete={false}
               />
             ))}
           </div>

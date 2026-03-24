@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import './Ideas.css';
 import IdeaWeaver from '../components/IdeaWeaver';
+import { generateIdeas } from '../utils/api';
+import { LightbulbIcon, SparkleIcon, PaperclipIcon } from '../components/Icons';
 
 const getTypeLabel = (type) => {
   const labels = {
-    'cross-pollination': '🔀 Cross-Pollination',
-    'gap-analysis': '📊 Skill Gap Filler',
-    'trend-fusion': '🔥 Trending',
-    'problem-to-product': '🎯 Problem → Product',
-    'skill-amplifier': '💪 Skill Amplifier',
-    'portfolio-standout': '⭐ Portfolio Standout',
-    'micro-saas': '💰 Micro-SaaS',
-    'community': '🌐 Open Source',
-    'extension': '🔧 Project Extension',
-    'combination': '🧩 Combination',
-    'solution': '✅ Solution',
-    'strength': '🏆 Strength-Based'
+    'cross-pollination': 'Cross-Pollination',
+    'gap-analysis': 'Skill Gap',
+    'trend-fusion': 'Trending',
+    'problem-to-product': 'Problem → Product',
+    'skill-amplifier': 'Skill Amplifier',
+    'portfolio-standout': 'Portfolio',
+    'micro-saas': 'Micro-SaaS',
+    'community': 'Open Source',
+    'extension': 'Extension',
+    'combination': 'Combination',
+    'solution': 'Solution',
+    'strength': 'Strength-Based'
   };
-  return labels[type] || '💡 Idea';
+  return labels[type] || 'Idea';
 };
 
 function Ideas() {
@@ -29,19 +31,10 @@ function Ideas() {
   const handleGenerateIdeas = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/ideas/generate', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate ideas');
-      }
-
-      const data = await response.json();
+      const { data } = await generateIdeas();
       setIdeas(data.ideas);
       setGenerated(true);
+      localStorage.setItem('ideaGeneratorVisited', 'true');
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to generate ideas. Make sure you have some notes!');
@@ -61,7 +54,7 @@ function Ideas() {
           disabled={loading}
           className="btn-generate"
         >
-          {loading ? 'Generating...' : '✨ Generate Ideas'}
+          {loading ? 'Generating...' : <><SparkleIcon size={15} /> Generate Ideas</>}
         </button>
       </div>
 
@@ -94,11 +87,11 @@ function Ideas() {
 
                 <div className="idea-footer">
                   {idea.reasoning && (
-                    <p className="idea-reasoning">💡 {idea.reasoning}</p>
+                    <p className="idea-reasoning"><LightbulbIcon size={13} /> {idea.reasoning}</p>
                   )}
                   {idea.relatedNoteIds?.length > 0 && (
                     <span className="related-count">
-                      📎 {idea.relatedNoteIds.length} related note{idea.relatedNoteIds.length !== 1 ? 's' : ''}
+                      <PaperclipIcon size={12} /> {idea.relatedNoteIds.length} related note{idea.relatedNoteIds.length !== 1 ? 's' : ''}
                     </span>
                   )}
                 </div>
@@ -116,7 +109,7 @@ function Ideas() {
         </div>
       ) : (
         <div className="ideas-hero">
-          <div className="hero-icon">💡</div>
+          <div className="hero-icon"><LightbulbIcon size={48} className="hero-svg-icon" /></div>
           <p>Click the button above to generate creative project ideas based on your notes</p>
         </div>
       )}

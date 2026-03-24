@@ -34,8 +34,8 @@ const generateAIEnhancedIdeas = async (notes, localIdeas) => {
     }
 
     const noteSummary = notes
-      .slice(0, 10) // Use top 10 notes for context
-      .map(n => `- ${n.title}: ${n.content ? n.content.substring(0, 200) : ''}`)
+      .slice(0, 10)
+      .map((n, i) => `- ${i === 0 ? '[MOST RECENT] ' : ''}${n.title}: ${n.content ? n.content.substring(0, 200) : ''}`)
       .join('\n');
 
     const localIdeasSummary = localIdeas
@@ -52,9 +52,10 @@ ${localIdeasSummary}
 
 Please:
 1. Review these ideas and suggest 2-3 NEW ideas that haven't been mentioned
-2. For each new idea, provide: title, brief description, required technologies, and confidence level (0-100)
-3. Consider unique angles like: market demand, career growth, open-source potential, or novel combinations of skills
-4. Format your response as JSON array with objects containing: title, description, technologies (array), confidence
+2. At least one idea must directly incorporate or build upon the [MOST RECENT] note
+3. For each new idea, provide: title, brief description, required technologies, and confidence level (0-100)
+4. Consider unique angles like: market demand, career growth, open-source potential, or novel combinations of skills
+5. Format your response as JSON array with objects containing: title, description, technologies (array), confidence
 
 Return ONLY valid JSON, no markdown formatting or extra text.`;
 

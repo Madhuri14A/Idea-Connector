@@ -8,15 +8,17 @@ function AddNote() {
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!title.trim() || !content.trim()) {
-      alert('Title and content are required!');
+      setError('Title and content are required');
       return; 
     }
+    setError('');
 
     setLoading(true);
     try {
@@ -29,7 +31,7 @@ function AddNote() {
       navigate('/notes');
     } catch (error) {
       console.error('Error creating note:', error);
-      alert('Failed to create note');
+      setError('Failed to create note. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -39,6 +41,7 @@ function AddNote() {
     <div className="add-note">
       <div className="form-container">
         <h1>Create New Note</h1>
+        {error && <p style={{ color: '#ef4444', margin: '0.5rem 0 1rem', fontSize: '0.875rem', background: '#fef2f2', padding: '0.75rem', borderRadius: '6px', border: '1px solid #fecaca' }}>{error}</p>}
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">

@@ -106,3 +106,74 @@ export const EyeIcon = (props) => (
     <circle cx="12" cy="12" r="3"/>
   </IconBase>
 );
+
+export const LockIcon = (props) => (
+  <IconBase {...props}>
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+  </IconBase>
+);
+
+export const WandIcon = (props) => (
+  <IconBase {...props}>
+    <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2 19l3 3 16.36-16.36a1.21 1.21 0 0 0 0-1.72Z"/>
+    <path d="m14 7 3 3"/>
+    <path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/>
+  </IconBase>
+);
+
+export const SparkleIcon = (props) => (
+  <IconBase {...props}>
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+  </IconBase>
+);
+
+export const BookOpenIcon = (props) => (
+  <IconBase {...props}>
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+  </IconBase>
+);
+
+export const WrenchIcon = (props) => (
+  <IconBase {...props}>
+    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+  </IconBase>
+);
+
+export const AlertTriangleIcon = (props) => (
+  <IconBase {...props}>
+    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+    <line x1="12" y1="9" x2="12" y2="13"/>
+    <line x1="12" y1="17" x2="12.01" y2="17"/>
+  </IconBase>
+);
+
+export const CheckIcon = (props) => (
+  <IconBase {...props}>
+    <polyline points="20 6 9 17 4 12"/>
+  </IconBase>
+);
+
+export const ArrowRightIcon = (props) => (
+  <IconBase {...props}>
+    <line x1="5" y1="12" x2="19" y2="12"/>
+    <polyline points="12 5 19 12 12 19"/>
+  </IconBase>
+);
+
+export const NetworkIcon = (props) => (
+  <IconBase {...props}>
+    <rect x="16" y="16" width="6" height="6" rx="1"/>
+    <rect x="2" y="16" width="6" height="6" rx="1"/>
+    <rect x="9" y="2" width="6" height="6" rx="1"/>
+    <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/>
+    <path d="M12 12V8"/>
+  </IconBase>
+);
+
+export const PaperclipIcon = (props) => (
+  <IconBase {...props}>
+    <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+  </IconBase>
+);

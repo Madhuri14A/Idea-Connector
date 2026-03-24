@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { OAuth2Client } = require('google-auth-library');
 const rateLimit = require('express-rate-limit');
-const { body, validationResult } = require('express-validator');
 const { v4: uuidv4 } = require('uuid');
 const driver = require('../config/neo4j');
 const { sendResetEmail } = require('../utils/emailService');
@@ -15,6 +14,14 @@ const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
   message: 'Too many login attempts, please try again later',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: 'Too many accounts created from this IP, please try again after an hour',
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -33,7 +40,6 @@ router.post('/google', authLimiter, async (req, res) => {
   }
 
   try {
-    console.log('Verifying token...');
     const ticket = await client.verifyIdToken({
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID
@@ -42,8 +48,6 @@ router.post('/google', authLimiter, async (req, res) => {
     const payload = ticket.getPayload();
     const email = payload.email;
     const name = payload.name;
-    console.log('Token verified for:', email);
-
     const session = driver.session();
 
     try {
@@ -85,7 +89,7 @@ router.post('/google', authLimiter, async (req, res) => {
   }
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', registerLimiter, async (req, res) => {
   const { email, name, password } = req.body;
 
   if (!email || !name || !password) {
@@ -207,6 +211,10 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
     return res.status(400).json({ error: 'Valid email is required' });
   }
 
+  if (!process.env.EMAIL_USER || process.env.EMAIL_USER.includes('your_gmail')) {
+    return res.status(503).json({ error: 'Email service is not configured on this server. Contact the administrator.' });
+  }
+
   const session = driver.session();
 
   try {
@@ -215,25 +223,29 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
       { email }
     );
 
-    if (result.records.length > 0) {
-      const resetToken = uuidv4();
-      const resetTokenExpiry = new Date(Date.now() + 1800000).toISOString();
-
-      await session.run(
-        `MATCH (u:User {email: $email}) SET u.resetToken = $token, u.resetTokenExpiry = $expiry`,
-        { email, token: resetToken, expiry: resetTokenExpiry }
-      );
-
-      res.json({ 
-        message: 'Reset token generated. Use it within 30 minutes.',
-        resetToken 
-      });
-    } else {
-      res.json({ 
-        message: 'If this email exists in our system, a reset token has been generated.',
-        resetToken: null
-      });
+    if (result.records.length === 0) {
+      return res.status(404).json({ error: 'No account found with this email address.' });
     }
+
+    const user = result.records[0].get('u').properties;
+    if (!user.password) {
+      return res.status(400).json({ error: 'This account uses Google Sign-In. No password to reset.' });
+    }
+
+    const resetToken = uuidv4();
+    const resetTokenExpiry = new Date(Date.now() + 1800000).toISOString();
+
+    await session.run(
+      `MATCH (u:User {email: $email}) SET u.resetToken = $token, u.resetTokenExpiry = $expiry`,
+      { email, token: resetToken, expiry: resetTokenExpiry }
+    );
+
+    const emailSent = await sendResetEmail(email, resetToken);
+    if (!emailSent) {
+      return res.status(500).json({ error: 'Failed to send reset email. Please try again later.' });
+    }
+
+    res.json({ message: 'Password reset link sent! Check your inbox (and spam folder).' });
   } catch (error) {
     console.error('Forgot password error:', error);
     res.status(500).json({ error: 'Failed to process request' });

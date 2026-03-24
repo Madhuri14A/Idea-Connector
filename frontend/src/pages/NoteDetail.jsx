@@ -1,7 +1,7 @@
 import { parseDate } from '../utils/date';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getNotes, deleteNote, updateNote, getRelatedNotes } from '../utils/api';
+import { getNote, deleteNote, updateNote, getRelatedNotes } from '../utils/api';
 import './NoteDetail.css';
 
 function NoteDetail() {
@@ -13,6 +13,7 @@ function NoteDetail() {
   const [editedNote, setEditedNote] = useState(null);
   const [tagInput, setTagInput] = useState('');
   const [relatedNotes, setRelatedNotes] = useState([]);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   useEffect(() => {
     fetchNote();
@@ -20,13 +21,11 @@ function NoteDetail() {
 
   const fetchNote = async () => {
     try {
-      const res = await getNotes();
-      const foundNote = res.data.find(n => n.id === id);
-      if (foundNote) {
-        setNote(foundNote);
-        setEditedNote(foundNote);
+      const res = await getNote(id);
+      if (res.data) {
+        setNote(res.data);
+        setEditedNote(res.data);
         
-        // Fetch related notes
         const relatedRes = await getRelatedNotes(id);
         setRelatedNotes(relatedRes.data);
       }
@@ -38,13 +37,12 @@ function NoteDetail() {
   };
 
   const handleDelete = async () => {
-    if (window.confirm('Delete this note?')) {
-      try {
-        await deleteNote(id);
-        navigate('/notes');
-      } catch (error) {
-        console.error('Error deleting note:', error);
-      }
+    try {
+      await deleteNote(id);
+      navigate('/notes');
+    } catch (error) {
+      console.error('Error deleting note:', error);
+      setConfirmDelete(false);
     }
   };
 
@@ -84,12 +82,15 @@ function NoteDetail() {
               >
                 Edit
               </button>
-              <button 
-                onClick={handleDelete}
-                className="btn btn-danger"
-              >
-                Delete
-              </button>
+              {confirmDelete ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '0.85rem', color: '#ef4444' }}>Sure?</span>
+                  <button onClick={handleDelete} className="btn btn-danger">Yes</button>
+                  <button onClick={() => setConfirmDelete(false)} className="btn btn-secondary">No</button>
+                </div>
+              ) : (
+                <button onClick={() => setConfirmDelete(true)} className="btn btn-danger">Delete</button>
+              )}
             </>
           )}
         </div>
@@ -142,7 +143,6 @@ function NoteDetail() {
             {note.content}
           </div>
           
-          {/* Related Notes Section */}
           {relatedNotes.length > 0 && (
             <div className="related-notes-section">
               <h2>Related Notes ({relatedNotes.length})</h2>

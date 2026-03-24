@@ -4,13 +4,28 @@ const stemmer = natural.PorterStemmer;
 
 const extractKeywords = (text, topN = 10) => {
   const words = tokenizer.tokenize(text.toLowerCase());
-  const stemmed = words.map(w => stemmer.stem(w));
+
+  const stopwords = new Set([
+    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'is', 'are', 'was', 'be', 'been', 'being',
+    'with', 'this', 'that', 'it', 'as', 'by', 'from', 'use', 'using', 'used', 'can', 'will', 'have', 'has', 'had',
+    'not', 'do', 'does', 'did', 'so', 'if', 'its', 'my', 'your', 'we', 'they', 'i', 'he', 'she', 'you', 'us', 'our',
+    'which', 'who', 'what', 'when', 'where', 'how', 'about', 'into', 'up', 'out', 'like', 'than', 'more', 'also',
+    'get', 'set', 'make', 'made', 'new', 'add', 'note', 'notes', 'project', 'create', 'creates', 'creating', 'created',
+    'build', 'builds', 'building', 'built', 'work', 'works', 'working', 'worked', 'need', 'needs', 'needed',
+    'just', 'one', 'two', 'three', 'first', 'some', 'any', 'all', 'each', 'no', 'yes', 'then', 'now', 'after',
+    'before', 'should', 'would', 'could', 'may', 'might', 'want', 'let', 'run', 'runs', 'running', 'see', 'know',
+    'way', 'time', 'thing', 'things', 'type', 'types', 'different', 'used', 'help', 'allows', 'allow', 'support',
+    'include', 'includes', 'including', 'provides', 'provide', 'feature', 'features', 'system', 'platform', 'tool',
+    'implement', 'implemented', 'implementing', 'example', 'simple', 'basic', 'similar', 'same', 'well', 'also'
+  ]);
+
+  // Filter BEFORE stemming — so 'creating' matches 'create' in the stoplist
+  const rawFiltered = words.filter(w => !stopwords.has(w) && w.length > 2);
+  const stemmed = rawFiltered.map(w => stemmer.stem(w));
   
-  const stopwords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'is', 'are', 'was', 'be', 'been', 'being']);
-  const filtered = stemmed.filter(w => !stopwords.has(w) && w.length > 2);
   
   const freqMap = {};
-  filtered.forEach(word => {
+  stemmed.forEach(word => {
     freqMap[word] = (freqMap[word] || 0) + 1;
   });
   

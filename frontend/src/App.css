@@ -91,11 +91,9 @@ body {
 
 .main-content {
   flex: 1;
-  margin-left: var(--sidebar-width);
   min-height: 100vh;
   background: transparent;
   padding-bottom: 2rem;
-  transition: margin-left 0.3s ease;
 }
 
 .content-wrapper {
@@ -164,6 +162,18 @@ body {
   color: var(--accent);
 }
 
+.btn-danger {
+  background: linear-gradient(135deg, #001E2B, #003B4D);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #bfd8f4;
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #fff;
+}
+
 /* Page headings */
 .page-header { margin-bottom: 2rem; }
 
@@ -182,7 +192,7 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .main-content { margin-left: 0; padding-bottom: 80px; }
+  .main-content { padding-bottom: 80px; }
   .content-wrapper { padding: 1rem; padding-top: calc(var(--header-height) + 1rem); }
   .page-title { font-size: 1.5rem; }
 }

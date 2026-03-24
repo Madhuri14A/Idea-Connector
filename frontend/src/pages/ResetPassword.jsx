@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { resetPassword } from '../utils/api';
 import './Login.css';
 
 function ResetPassword() {
@@ -31,28 +32,14 @@ function ResetPassword() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/auth/reset-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email, 
-          resetToken, 
-          newPassword 
-        })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to reset password');
-      }
+      await resetPassword({ email, resetToken, newPassword });
 
       setSuccess('Password reset successful! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setError(err.message || 'Failed to reset password');
+      setError(err.response?.data?.error || 'Failed to reset password');
     } finally {
       setLoading(false);
     }

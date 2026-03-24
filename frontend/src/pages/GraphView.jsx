@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { getNotes } from '../utils/api';
+import { getNotes, rebuildConnections } from '../utils/api';
 import { parseDate } from '../utils/date';
+import { NetworkIcon } from '../components/Icons';
 import './GraphView.css';
 
 function GraphView() {
@@ -9,8 +10,20 @@ function GraphView() {
   const [selectedNote, setSelectedNote] = useState(null);
   const [hoveredNote, setHoveredNote] = useState(null);
   const [stats, setStats] = useState({ nodes: 0, connections: 0, clusters: 0 });
+  const [rebuilding, setRebuilding] = useState(false);
 
-  // Better color palette - hand-picked for visual harmony
+  const handleRebuildConnections = async () => {
+    setRebuilding(true);
+    try {
+      await rebuildConnections();
+      await fetchAndRender();
+    } catch (err) {
+      console.error('Rebuild failed:', err);
+    } finally {
+      setRebuilding(false);
+    }
+  };
+
   const colorPalette = [
     '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
     '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B195', '#C06C84',
@@ -18,7 +31,6 @@ function GraphView() {
     '#FFD3B6', '#FFAAA5', '#FF8B94', '#FFDAC1', '#A8DADC'
   ];
 
-  // Hash function for consistent colors
   const hashStringToIndex = (str) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -30,7 +42,6 @@ function GraphView() {
   };
 
   const getNodeColor = (note) => {
-    // Use note ID for consistent color per note
     const colorIndex = hashStringToIndex(note.id);
     return colorPalette[colorIndex];
   };
@@ -193,7 +204,6 @@ function GraphView() {
         .on('end', dragEnded)
       );
 
-    // Glow circle (only visible on hover)
     nodeGroups
       .append('circle')
       .attr('class', 'glow-circle')
@@ -202,7 +212,6 @@ function GraphView() {
       .attr('opacity', 0)
       .style('filter', 'blur(8px)');
 
-    // Main circle
     nodeGroups
       .append('circle')
       .attr('class', 'main-circle')
@@ -212,14 +221,12 @@ function GraphView() {
       .attr('stroke-width', 2)
       .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))');
 
-    // Inner highlight (for depth)
     nodeGroups
       .append('circle')
       .attr('r', d => Math.max(5, d.connections * 1 + 5))
       .attr('fill', 'white')
       .attr('opacity', 0.3);
 
-    // Connection count badge
     nodeGroups
       .filter(d => d.connections > 0)
       .append('circle')
@@ -246,7 +253,6 @@ function GraphView() {
       .style('pointer-events', 'none')
       .text(d => d.connections);
 
-    // Labels
     const labelGroup = svg.append('g').attr('class', 'labels');
 
     const labelGroups = labelGroup
@@ -321,7 +327,6 @@ function GraphView() {
 
   return (
     <div className="graph-view">
-      {/* Header */}
       <div className="graph-header">
         <div className="header-content">
           <div className="header-title">
@@ -351,9 +356,14 @@ function GraphView() {
           </svg>
           Refresh
         </button>
+        <button onClick={handleRebuildConnections} className="btn-refresh" disabled={rebuilding} title="Recalculate all connections with updated logic">
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+          {rebuilding ? 'Rebuilding...' : 'Rebuild Connections'}
+        </button>
       </div>
 
-      {/* Hover info */}
       {hoveredNote && (
         <div className="hover-info">
           <div className="hover-header">
@@ -382,7 +392,6 @@ function GraphView() {
         </div>
       )}
 
-      {/* Visual Guide */}
       <div className="guide-panel">
         <div className="guide-title">
           <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -423,24 +432,21 @@ function GraphView() {
         </div>
       </div>
 
-      {/* Graph canvas */}
       <div className="graph-canvas-wrapper">
         <svg 
           ref={svgRef} 
           className="graph-canvas"
         />
 
-        {/* Empty state overlay inside canvas */}
         {stats.nodes === 0 && (
           <div className="graph-empty">
-            <div className="empty-icon">🕸️</div>
+            <div className="empty-icon"><NetworkIcon size={48} className="empty-svg-icon" /></div>
             <h3>No notes in your graph yet</h3>
             <p>Create notes and connect them to visualize your knowledge network</p>
           </div>
         )}
       </div>
 
-      {/* Sidebar */}
       {selectedNote && (
         <div className="note-sidebar">
           <button className="close-btn" onClick={() => setSelectedNote(null)}>

@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SearchIcon } from './Icons';
 import './SearchBar.css';
 
-function SearchBar({ onSearch }) {
-  const [query, setQuery] = useState('');
-  const [sortBy, setSortBy] = useState('recent');
+function SearchBar({ onSearch, searchParams = { q: '', tags: '', sort: 'recent' } }) {
+  const { q = '', sort = 'recent' } = searchParams;
 
   const handleInputChange = (e) => {
-    setQuery(e.target.value);
+    const newQuery = e.target.value;
+    onSearch({ ...searchParams, q: newQuery });
   };
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-      onSearch({ q: query, tags: '', sort: sortBy });
+      // Trigger search on Enter
+      onSearch(searchParams);
     }
   };
 
   const handleSortChange = (value) => {
-    setSortBy(value);
-    onSearch({ q: query, tags: '', sort: value });
+    onSearch({ ...searchParams, sort: value });
+  };
+
+  const handleClearSearch = () => {
+    onSearch({ q: '', tags: '', sort: 'recent' });
   };
 
   return (
@@ -28,15 +32,25 @@ function SearchBar({ onSearch }) {
         <input
           type="text"
           placeholder="Search notes..."
-          value={query}
+          value={q}
           onChange={handleInputChange}
           onKeyPress={handleKeyPress}
           className="search-input"
         />
+        {q && (
+          <button
+            onClick={handleClearSearch}
+            className="search-clear-btn"
+            title="Clear search"
+            type="button"
+          >
+            ✕
+          </button>
+        )}
       </div>
 
       <select
-        value={sortBy}
+        value={sort}
         onChange={(e) => handleSortChange(e.target.value)}
         className="sort-select"
       >

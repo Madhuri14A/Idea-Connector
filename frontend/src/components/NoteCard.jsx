@@ -2,7 +2,7 @@ import React from 'react';
 import './NoteCard.css';
 import { EyeIcon, TrashIcon } from './Icons';
 
-function NoteCard({ note, onDelete, onView }) {
+function NoteCard({ note, onDelete, onView, isPendingDelete = false }) {
   const contentPreview = note.content 
     ? (note.content.length > 120 ? note.content.substring(0, 120) + "..." : note.content) 
     : "No content";
@@ -17,10 +17,11 @@ function NoteCard({ note, onDelete, onView }) {
           </button>
           <button 
             onClick={(e) => { e.stopPropagation(); onDelete(note.id); }} 
-            className="action-btn delete" 
-            title="Delete"
+            className={`action-btn delete${isPendingDelete ? ' confirm' : ''}`}
+            title={isPendingDelete ? 'Click again to confirm delete' : 'Delete'}
+            style={isPendingDelete ? { background: '#ef4444', color: 'white', borderRadius: '4px', padding: '2px 8px', fontSize: '0.75rem', fontWeight: '600' } : {}}
           >
-            <TrashIcon size={18} />
+            {isPendingDelete ? '?' : <TrashIcon size={18} />}
           </button>
         </div>
       </div>

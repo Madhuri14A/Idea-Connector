@@ -20,15 +20,38 @@
   gap: 1rem;
 }
 
-.mobile-logo {
-  font-weight: 800;
-  font-size: 1.2rem;
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
   color: var(--accent);
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.navbar-logo-icon {
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 240, 255, 0.35);
+  flex-shrink: 0;
+}
+
+.mobile-logo {
   display: none;
 }
 
 .menu-toggle {
-  display: none; /* Hide on desktop */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: none;
   border: none;
   cursor: pointer;

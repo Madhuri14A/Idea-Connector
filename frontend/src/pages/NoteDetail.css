@@ -60,7 +60,7 @@
 
 .content {
   line-height: 1.8;
-  color: #333;
+  color: #6493ac;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
@@ -126,7 +126,7 @@
 }
 
 .related-notes-section h2 {
-  color: #333;
+  color: #444343;
   margin-bottom: 1.5rem;
   font-size: 1.3rem;
 }
@@ -138,7 +138,7 @@
 }
 
 .related-note-card {
-  background: #fff;
+  background: #c3def0;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 1rem;

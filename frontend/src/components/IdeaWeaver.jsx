@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import api from '../utils/api';
+import {
+  BookOpenIcon, WrenchIcon, AlertTriangleIcon,
+  Share2Icon, SparkleIcon, WandIcon, ArrowRightIcon
+} from './Icons';
 import './IdeaWeaver.css';
 
 const IdeaWeaver = ({ idea, onClose }) => {
@@ -6,6 +11,7 @@ const IdeaWeaver = ({ idea, onClose }) => {
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('chat');
+  const [error, setError] = useState('');
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -17,31 +23,24 @@ const IdeaWeaver = ({ idea, onClose }) => {
   }, [messages]);
 
   const actions = [
-    { type: 'EXPLAIN', label: '💡 Explain', icon: '📖' },
-    { type: 'BUILD', label: '🛠️ Build Plan', icon: '🛠️' },
-    { type: 'RISKS', label: '⚠️ Risks', icon: '⚠️' },
-    { type: 'SIMILAR', label: '🔗 Similar', icon: '🔗' },
-    { type: 'REFINE', label: '✨ Refine', icon: '✨' }
+    { type: 'EXPLAIN', label: 'Explain', Icon: BookOpenIcon },
+    { type: 'BUILD', label: 'Build Plan', Icon: WrenchIcon },
+    { type: 'RISKS', label: 'Risks', Icon: AlertTriangleIcon },
+    { type: 'SIMILAR', label: 'Similar', Icon: Share2Icon },
+    { type: 'REFINE', label: 'Refine', Icon: SparkleIcon }
   ];
 
   const handleActionClick = async (actionType) => {
     if (!idea) return;
 
     setLoading(true);
+    setError('');
     try {
-      const response = await fetch('http://localhost:5000/api/weaver/action', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          actionType,
-          ideaContent: idea.title + '\n' + idea.description
-        })
+      const { data } = await api.post('/weaver/action', {
+        actionType,
+        ideaContent: idea.title + '\n' + idea.description
       });
 
-      const data = await response.json();
       if (data.success) {
         setMessages([
           ...messages,
@@ -50,11 +49,11 @@ const IdeaWeaver = ({ idea, onClose }) => {
         ]);
         setActiveTab('chat');
       } else {
-        alert(`Error: ${data.error || 'Failed to process action'}`);
+        setError(data.error || 'Failed to process action');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Failed to process action: ' + error.message);
+      setError(error.response?.data?.error || 'Failed to process action');
     } finally {
       setLoading(false);
     }
@@ -67,30 +66,23 @@ const IdeaWeaver = ({ idea, onClose }) => {
     setLoading(true);
     const newMessage = userInput;
     setUserInput('');
+    setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/weaver/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          userMessage: newMessage,
-          conversationHistory: messages,
-          currentIdea: idea ? idea.title + '\n' + idea.description : ''
-        })
+      const { data } = await api.post('/weaver/chat', {
+        userMessage: newMessage,
+        conversationHistory: messages,
+        currentIdea: idea ? idea.title + '\n' + idea.description : ''
       });
 
-      const data = await response.json();
       if (data.success) {
         setMessages(data.conversationHistory);
       } else {
-        alert(`Error: ${data.error || 'Failed to send message'}`);
+        setError(data.error || 'Failed to send message');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Failed to send message: ' + error.message);
+      setError(error.response?.data?.error || 'Failed to send message');
     } finally {
       setLoading(false);
     }
@@ -113,7 +105,7 @@ const IdeaWeaver = ({ idea, onClose }) => {
   return (
     <div className="weaver-container">
       <div className="weaver-header">
-        <h3>💫 Idea Weaver {loading ? '...' : ''}</h3>
+        <h3><WandIcon size={16} /> Idea Weaver {loading ? '...' : ''}</h3>
         <div style={{display: 'flex', gap: '0.5rem'}}>
           <button className="clear-btn" onClick={clearHistory} disabled={messages.length === 0}>
             Clear
@@ -125,6 +117,11 @@ const IdeaWeaver = ({ idea, onClose }) => {
       </div>
 
       <div className="weaver-tabs">
+        {error && (
+            <p style={{ color: '#ef4444', fontSize: '0.8rem', padding: '0.5rem 1rem', background: 'rgba(239,68,68,0.08)', borderRadius: '6px', margin: '0 0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <AlertTriangleIcon size={14} /> {error}
+          </p>
+        )}
         <button
           className={`tab ${activeTab === 'actions' ? 'active' : ''}`}
           onClick={() => setActiveTab('actions')}
@@ -149,8 +146,8 @@ const IdeaWeaver = ({ idea, onClose }) => {
               disabled={loading}
               title={action.label}
             >
-              {action.icon}
-              <span>{action.type}</span>
+              <action.Icon size={16} />
+              <span>{action.label}</span>
             </button>
           ))}
         </div>
@@ -195,7 +192,7 @@ const IdeaWeaver = ({ idea, onClose }) => {
               className="chat-input"
             />
             <button type="submit" disabled={loading || !userInput.trim()} className="send-btn">
-              {loading ? '...' : '→'}
+              {loading ? '...' : <ArrowRightIcon size={16} />}
             </button>
           </form>
         </div>

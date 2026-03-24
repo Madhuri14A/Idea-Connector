@@ -1,33 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { MenuIcon, SearchIcon, UserIcon, LogOutIcon } from './Icons';
+import { MenuIcon, SearchIcon, UserIcon, LogOutIcon, LightbulbIcon } from './Icons';
 import './Navbar.css';
 
-function Navbar({ isAuthenticated, setIsAuthenticated, toggleSidebar }) {
+function Navbar({ isAuthenticated, onLogout, user, toggleSidebar }) {
   const [scrolled, setScrolled] = useState(false);
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    const userData = localStorage.getItem('user');
-    if (userData) {
-      try {
-        setUser(JSON.parse(userData));
-      } catch (e) {
-        console.error("Failed to parse user data", e);
-      }
-    }
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setIsAuthenticated(false);
+    onLogout();
     navigate('/');
   };
 
@@ -42,8 +29,11 @@ function Navbar({ isAuthenticated, setIsAuthenticated, toggleSidebar }) {
           <MenuIcon size={24} />
         </button>
         
-        <Link to="/" className="mobile-logo">
-          IdeaConnector
+        <Link to="/" className="navbar-logo">
+          <div className="navbar-logo-icon">
+            <LightbulbIcon size={16} color="white" />
+          </div>
+          <span>IdeaConnector</span>
         </Link>
         
         {isAuthenticated && (

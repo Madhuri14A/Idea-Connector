@@ -74,16 +74,16 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #001E2B, #003B4D);
-  color: var(--accent);
-  border: 1px solid rgba(0, 240, 255, 0.35);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 240, 255, 0.15);
+  background: var(--secondary);
+  color: #0b1326;
+  border: 1px solid rgba(79, 219, 200, 0.55);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(79, 219, 200, 0.2);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #002838, #004D63);
+  background: var(--success);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.25);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(79, 219, 200, 0.3);
 }
 
 .btn-primary:disabled {

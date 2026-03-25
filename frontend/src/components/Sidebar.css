@@ -181,3 +181,13 @@
   -webkit-backdrop-filter: blur(4px);
   z-index: 40;
 }
+
+@media (min-width: 1024px) {
+  .sidebar {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: none;
+  }
+}

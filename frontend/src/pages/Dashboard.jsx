@@ -208,136 +208,136 @@ function Dashboard({ isAuthenticated }) {
 
       <div className="dash-body">
 
-        <div className="dash-main">
+        {/* ── Top row: Activity (big) + Checklist (small) ── */}
+        <div className="dash-top-row">
 
-          {isAuthenticated && (
-            <div className="dash-section">
-              <h2 className="dash-section-title">Activity — last 7 days</h2>
-              <div className="activity-chart">
-                {activityData.map((day, i) => (
-                  <div key={i} className="activity-col">
-                    <div className="activity-bar-wrap">
-                      <div
-                        className="activity-bar"
-                        style={{ height: `${(day.count / maxActivity) * 100}%` }}
-                        title={`${day.count} note${day.count !== 1 ? 's' : ''}`}
-                      >
-                        {day.count > 0 && <span className="activity-count">{day.count}</span>}
-                      </div>
-                    </div>
-                    <span className="activity-label">{day.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="dash-section">
-            <div className="dash-section-header">
-              <h2 className="dash-section-title">Recent Notes</h2>
-              {isAuthenticated && notes.length > 0 && (
-                <Link to="/notes" className="view-all">View All →</Link>
-              )}
-            </div>
-
-            {notes.length > 0 ? (
-                <div className="notes-list">
-                  {notes.map(note => (
+          <div className="dash-activity-box">
+            <h2 className="dash-section-title">Activity — last 7 days</h2>
+            <div className="activity-chart">
+              {activityData.map((day, i) => (
+                <div key={i} className="activity-col">
+                  <div className="activity-bar-wrap">
                     <div
-                      key={note.id}
-                      className="note-card-modern"
-                      onClick={() => navigate(`/notes/${note.id}`)}
+                      className="activity-bar"
+                      style={{ height: `${(day.count / maxActivity) * 100}%` }}
+                      title={`${day.count} note${day.count !== 1 ? 's' : ''}`}
                     >
-                      <div className="note-header">
-                        <div
-                          className="note-indicator"
-                          style={{ backgroundColor: getTagColor(note.tags?.[0]) }}
-                        />
-                        <h3>{note.title}</h3>
-                      </div>
-                      <p className="note-content">
-                        {note.content.substring(0, 120)}{note.content.length > 120 && '...'}
-                      </p>
-                      <div className="note-footer">
-                        <div className="note-tags">
-                          {note.tags?.slice(0, 3).map(tag => (
-                            <span
-                              key={tag}
-                              className="tag-pill"
-                              style={{ backgroundColor: getTagColor(tag) + '20', color: getTagColor(tag) }}
-                            >
-                              #{tag}
-                            </span>
-                          ))}
-                          {note.tags?.length > 3 && (
-                            <span className="tag-more">+{note.tags.length - 3}</span>
-                          )}
-                        </div>
-                        <span className="note-time">{timeAgo(note.createdAt)}</span>
-                      </div>
+                      {day.count > 0 && <span className="activity-count">{day.count}</span>}
                     </div>
-                  ))}
+                  </div>
+                  <span className="activity-label">{day.label}</span>
                 </div>
-              ) : (
-                <div className="empty-state">
-                  <div className="empty-icon"><FileTextIcon size={40} className="empty-svg-icon" /></div>
-                  <h3>No notes yet</h3>
-                  <p>Start building your knowledge base</p>
-                  <button className="btn-primary" style={{ margin: '0 auto', display: 'block', width: 'fit-content' }} onClick={() => navigate('/notes/new')}>
-                    Create Your First Note
+              ))}
+            </div>
+          </div>
+
+          <div className="dash-checklist-box">
+            {showOnboarding ? (
+              <>
+                <h2 className="dash-section-title">Getting Started</h2>
+                <div className="onboarding-progress-bar">
+                  <div
+                    className="onboarding-progress-fill"
+                    style={{ width: `${(onboardingDone / onboardingSteps.length) * 100}%` }}
+                  />
+                </div>
+                <p className="onboarding-count">{onboardingDone} of {onboardingSteps.length} done</p>
+                <ul className="onboarding-list">
+                  {onboardingSteps.map(step => (
+                    <li
+                      key={step.id}
+                      className={`onboarding-item ${step.done ? 'done' : ''}`}
+                      onClick={() => !step.done && navigate(step.path)}
+                    >
+                      <span className="onboarding-check">{step.done ? <CheckIcon size={10} /> : null}</span>
+                      <span className="onboarding-label">{step.label}</span>
+                      {!step.done && <span className="onboarding-arrow"><ArrowRightIcon size={12} /></span>}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <>
+                <h2 className="dash-section-title">Explore</h2>
+                <div className="quick-links">
+                  <button className="quick-link" onClick={() => navigate('/notes')}>
+                    <FileTextIcon size={15} /> All Notes
+                  </button>
+                  <button className="quick-link" onClick={() => navigate('/graph')}>
+                    <Share2Icon size={15} /> Graph View
+                  </button>
+                  <button className="quick-link" onClick={() => navigate('/ideas')}>
+                    <LightbulbIcon size={15} /> Idea Generator
+                  </button>
+                  <button className="quick-link" onClick={() => navigate('/weaver')}>
+                    <WandIcon size={15} /> Idea Weaver
                   </button>
                 </div>
-              )}
+              </>
+            )}
           </div>
+
         </div>
 
-        <div className="dash-side">
+        {/* ── Bottom: Recent Notes full width ── */}
+        <div className="dash-recent-section">
+          <div className="dash-section-header">
+            <h2 className="dash-section-title">Recent Notes</h2>
+            {isAuthenticated && notes.length > 0 && (
+              <Link to="/notes" className="view-all">View All →</Link>
+            )}
+          </div>
 
-          {showOnboarding && (
-            <div className="dash-section onboarding-section">
-              <h2 className="dash-section-title">Getting Started</h2>
-              <div className="onboarding-progress-bar">
+          {notes.length > 0 ? (
+            <div className="notes-list">
+              {notes.map(note => (
                 <div
-                  className="onboarding-progress-fill"
-                  style={{ width: `${(onboardingDone / onboardingSteps.length) * 100}%` }}
-                />
-              </div>
-              <p className="onboarding-count">{onboardingDone} of {onboardingSteps.length} done</p>
-              <ul className="onboarding-list">
-                {onboardingSteps.map(step => (
-                  <li
-                    key={step.id}
-                    className={`onboarding-item ${step.done ? 'done' : ''}`}
-                    onClick={() => !step.done && navigate(step.path)}
-                  >
-                    <span className="onboarding-check">{step.done ? <CheckIcon size={10} /> : null}</span>
-                    <span className="onboarding-label">{step.label}</span>
-                    {!step.done && <span className="onboarding-arrow"><ArrowRightIcon size={12} /></span>}
-                  </li>
-                ))}
-              </ul>
+                  key={note.id}
+                  className="note-card-modern"
+                  onClick={() => navigate(`/notes/${note.id}`)}
+                >
+                  <div className="note-header">
+                    <div
+                      className="note-indicator"
+                      style={{ backgroundColor: getTagColor(note.tags?.[0]) }}
+                    />
+                    <h3>{note.title}</h3>
+                  </div>
+                  <p className="note-content">
+                    {note.content.substring(0, 120)}{note.content.length > 120 && '...'}
+                  </p>
+                  <div className="note-footer">
+                    <div className="note-tags">
+                      {note.tags?.slice(0, 3).map(tag => (
+                        <span
+                          key={tag}
+                          className="tag-pill"
+                          style={{ backgroundColor: getTagColor(tag) + '20', color: getTagColor(tag) }}
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                      {note.tags?.length > 3 && (
+                        <span className="tag-more">+{note.tags.length - 3}</span>
+                      )}
+                    </div>
+                    <span className="note-time">{timeAgo(note.createdAt)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <div className="empty-icon"><FileTextIcon size={40} className="empty-svg-icon" /></div>
+              <h3>No notes yet</h3>
+              <p>Start building your knowledge base</p>
+              <button className="btn-primary" style={{ margin: '0 auto', display: 'block', width: 'fit-content' }} onClick={() => navigate('/notes/new')}>
+                Create Your First Note
+              </button>
             </div>
           )}
-
-          <div className="dash-section">
-            <h2 className="dash-section-title">Explore</h2>
-            <div className="quick-links">
-              <button className="quick-link" onClick={() => navigate('/notes')}>
-                <FileTextIcon size={15} /> All Notes
-              </button>
-              <button className="quick-link" onClick={() => navigate('/graph')}>
-                <Share2Icon size={15} /> Graph View
-              </button>
-              <button className="quick-link" onClick={() => navigate('/ideas')}>
-                <LightbulbIcon size={15} /> Idea Generator
-              </button>
-              <button className="quick-link" onClick={() => navigate('/weaver')}>
-                <WandIcon size={15} /> Idea Weaver
-              </button>
-            </div>
-          </div>
-
         </div>
+
       </div>
     </div>
   );

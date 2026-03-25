@@ -1,49 +1,49 @@
 :root {
-  /* ===== Dark Neon Cyan / Techno Theme ===== */
-  --accent: #00F0FF;
-  --accent-hover: #00D4E5;
-  --accent-deep: #0099AA;
-  --accent-light: rgba(0, 240, 255, 0.10);
-  --accent-soft: rgba(0, 240, 255, 0.10);
+  /* ===== Ethereal Slate Theme ===== */
+  --accent: #c0c1ff;
+  --accent-hover: #e1e0ff;
+  --accent-deep: #8083ff;
+  --accent-light: rgba(128, 131, 255, 0.14);
+  --accent-soft: rgba(128, 131, 255, 0.10);
 
   /* Aliases */
-  --primary: #00F0FF;
-  --primary-hover: #00D4E5;
-  --primary-light: rgba(0, 240, 255, 0.10);
-  --secondary: #7B61FF;
+  --primary: #c0c1ff;
+  --primary-hover: #e1e0ff;
+  --primary-light: rgba(128, 131, 255, 0.14);
+  --secondary: #4fdbc8;
 
   /* Status */
-  --success: #00FF88;
+  --success: #71f8e4;
   --warning: #FFD600;
   --error: #FF4560;
 
   /* ===== Dark Glassmorphism ===== */
   --glass: rgba(8, 14, 35, 0.75);
   --glass-strong: rgba(5, 10, 25, 0.92);
-  --glass-border: rgba(0, 240, 255, 0.18);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(0, 240, 255, 0.07);
+  --glass-border: rgba(144, 143, 160, 0.22);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 
   /* ===== Backgrounds ===== */
   --bg-main: transparent;
   --bg-sidebar: rgba(5, 10, 25, 0.96);
   --bg-card: rgba(8, 14, 35, 0.75);
-  --bg-hover: rgba(0, 240, 255, 0.06);
+  --bg-hover: rgba(192, 193, 255, 0.08);
 
   /* ===== Text ===== */
-  --text-primary: #D0E8FF;
-  --text-secondary: #6890B0;
-  --text-muted: #3A5870;
+  --text-primary: #dae2fd;
+  --text-secondary: #c7c4d7;
+  --text-muted: #908fa0;
   --text-inverse: #070B14;
 
   /* ===== Borders ===== */
-  --border-color: rgba(0, 240, 255, 0.12);
-  --border-hover: rgba(0, 240, 255, 0.40);
+  --border-color: rgba(70, 69, 84, 0.6);
+  --border-hover: rgba(128, 131, 255, 0.45);
 
   /* ===== Neon Shadows ===== */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 240, 255, 0.07);
-  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.65), 0 0 30px rgba(0, 240, 255, 0.10);
-  --shadow-xl: 0 16px 60px rgba(0, 0, 0, 0.75), 0 0 50px rgba(0, 240, 255, 0.13);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.55), 0 0 20px rgba(128, 131, 255, 0.08);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.65), 0 0 30px rgba(128, 131, 255, 0.12);
+  --shadow-xl: 0 16px 60px rgba(0, 0, 0, 0.75), 0 0 50px rgba(79, 219, 200, 0.12);
 
   /* ===== Layout ===== */
   --sidebar-width: 260px;
@@ -56,7 +56,7 @@
   --tag-blockchain: #627EEA;
   --tag-go: #00ADD8;
   --tag-css: #1572B6;
-  --tag-default: #00F0FF;
+  --tag-default: #c0c1ff;
 }
 
 * {
@@ -71,14 +71,14 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
-  /* Dark neon background — deep blue-black with glowing accents */
-  background-color: #070B14;
+  /* Ethereal slate background */
+  background-color: #0b1326;
   background-image:
-    radial-gradient(ellipse 80% 60% at 8%  5%,  rgba(15, 40, 140, 0.50) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 55% at 92% 92%,  rgba(0, 30, 100, 0.40) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 45% at 85% 8%,   rgba(0,  90, 180, 0.25) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 15% 85%,  rgba(0, 120, 180, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 35% 35% at 50% 50%,  rgba(0,  20,  70, 0.70) 0%, transparent 70%);
+    radial-gradient(ellipse 80% 60% at 8%  5%,  rgba(73, 75, 214, 0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 55% at 92% 92%, rgba(79, 219, 200, 0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 85% 8%,  rgba(128, 131, 255, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 15% 85%, rgba(79, 219, 200, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 35% at 50% 50%, rgba(19, 27, 46, 0.72) 0%, transparent 70%);
   background-attachment: fixed;
 }
 
@@ -118,7 +118,7 @@ body {
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(0, 240, 255, 0.35);
+  border-color: rgba(128, 131, 255, 0.35);
 }
 
 /* Buttons */
@@ -137,15 +137,15 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #001E2B, #003B4D);
-  color: var(--accent);
-  border: 1px solid rgba(0, 240, 255, 0.35);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 240, 255, 0.15);
+  background: var(--secondary);
+  color: #0b1326;
+  border: 1px solid rgba(79, 219, 200, 0.55);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(79, 219, 200, 0.2);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #002838, #004D63);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.25);
+  background: var(--success);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(79, 219, 200, 0.3);
   transform: translateY(-1px);
 }
 
@@ -158,7 +158,7 @@ body {
 
 .btn-secondary:hover {
   background: rgba(8, 14, 35, 0.9);
-  border-color: rgba(0, 240, 255, 0.4);
+  border-color: rgba(128, 131, 255, 0.4);
   color: var(--accent);
 }
 
@@ -190,6 +190,12 @@ body {
   font-size: 1.1rem;
 }
 
+@media (min-width: 1024px) {
+  .main-content {
+    margin-left: var(--sidebar-width);
+  }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .main-content { padding-bottom: 80px; }
@@ -204,9 +210,9 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%   { box-shadow: 0 0 0 0   rgba(0, 240, 255, 0.5); }
-  70%  { box-shadow: 0 0 0 12px rgba(0, 240, 255, 0);  }
-  100% { box-shadow: 0 0 0 0   rgba(0, 240, 255, 0);   }
+  0%   { box-shadow: 0 0 0 0   rgba(128, 131, 255, 0.45); }
+  70%  { box-shadow: 0 0 0 12px rgba(128, 131, 255, 0);   }
+  100% { box-shadow: 0 0 0 0   rgba(128, 131, 255, 0);   }
 }
 
 @keyframes slideInRight {

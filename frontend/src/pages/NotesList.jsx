@@ -11,6 +11,8 @@ function NotesList() {
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [searchParams, setSearchParams] = useState({ q: '', tags: '', sort: 'recent' });
+  const [currentPage, setCurrentPage] = useState(1);
+  const NOTES_PER_PAGE = 9;
 
   const navigate = useNavigate();
 
@@ -54,6 +56,7 @@ function NotesList() {
 
   const handleSearch = (params) => {
     setSearchParams(params);
+    setCurrentPage(1);
   };
 
   const handleDelete = async (id) => {
@@ -64,6 +67,9 @@ function NotesList() {
       console.error('Error deleting note:', error);
     }
   };
+
+  const totalPages = Math.ceil(notes.length / NOTES_PER_PAGE);
+  const paginatedNotes = notes.slice((currentPage - 1) * NOTES_PER_PAGE, currentPage * NOTES_PER_PAGE);
 
   if (loading) return (
     <div className="loading-container">
@@ -98,17 +104,54 @@ function NotesList() {
       
       <div className="notes-content">
         {notes.length > 0 ? (
-          <div className="modern-notes-grid">
-            {notes.map(note => (
-              <NoteCard 
-                key={note.id}
-                note={note}
-                onDelete={handleDelete}
-                onView={() => navigate(`/notes/${note.id}`)}
-                isPendingDelete={false}
-              />
-            ))}
-          </div>
+          <>
+            <div className="notes-results-bar">
+              <span className="notes-count">{notes.length} note{notes.length !== 1 ? 's' : ''}</span>
+              {totalPages > 1 && (
+                <span className="notes-page-indicator">Page {currentPage} of {totalPages}</span>
+              )}
+            </div>
+            <div className="modern-notes-grid">
+              {paginatedNotes.map(note => (
+                <NoteCard 
+                  key={note.id}
+                  note={note}
+                  onDelete={handleDelete}
+                  onView={() => navigate(`/notes/${note.id}`)}
+                  isPendingDelete={false}
+                />
+              ))}
+            </div>
+            {totalPages > 1 && (
+              <div className="pagination">
+                <button
+                  className="page-btn"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                >
+                  ← Prev
+                </button>
+                <div className="page-numbers">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      className={`page-num ${page === currentPage ? 'active' : ''}`}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="page-btn"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="empty-notes-state">
             <div className="empty-icon-large">📄</div>

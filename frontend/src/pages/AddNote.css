@@ -5,17 +5,17 @@
 }
 
 .form-container {
-  background: var(--bg-card);
+  background: #f6ebc0;
   border-radius: var(--border-radius);
   padding: 2.5rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(44, 47, 49, 0.06);
+  border: none;
 }
 
 .form-container h1 {
   font-size: 2rem;
   margin: 0 0 2rem 0;
-  color: var(--text-primary);
+  color: #665761;
   font-weight: 700;
 }
 
@@ -27,7 +27,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #665761;
   font-size: 0.95rem;
 }
 
@@ -35,12 +35,12 @@
 .form-group textarea {
   width: 100%;
   padding: 0.875rem;
-  border: 1px solid var(--border-color);
+  border: none;
   border-radius: 8px;
   font-family: inherit;
   font-size: 1rem;
-  color: var(--text-primary);
-  background-color: var(--bg-main);
+  color: #2c2f31;
+  background-color: rgba(255, 255, 255, 0.72);
   transition: all 0.2s;
 }
 
@@ -52,9 +52,8 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px #FDE2E9;
-  background-color: rgba(8, 14, 35, 0.90);
+  box-shadow: 0 0 0 3px rgba(99, 92, 58, 0.18);
+  background-color: #fff;
 }
 
 .form-actions {
@@ -74,16 +73,17 @@
 }
 
 .btn-primary {
-  background: var(--secondary);
-  color: #0b1326;
-  border: 1px solid rgba(79, 219, 200, 0.55);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(79, 219, 200, 0.2);
+  background: linear-gradient(135deg, #635c3a, #56502f);
+  color: #fef3c7;
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(99, 92, 58, 0.22);
 }
 
 .btn-primary:hover {
-  background: var(--success);
+  background: linear-gradient(135deg, #766f4b, #635c3a);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(79, 219, 200, 0.3);
+  box-shadow: 0 6px 16px rgba(99, 92, 58, 0.28);
 }
 
 .btn-primary:disabled {
@@ -95,13 +95,13 @@
 }
 
 .btn-secondary {
-  background: rgba(8, 14, 35, 0.92);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.6);
+  color: #665761;
+  border: none;
+  border-radius: 999px;
 }
 
 .btn-secondary:hover {
-  background: var(--bg-hover);
-  border-color: var(--text-muted);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.85);
+  color: #2c2f31;
 }

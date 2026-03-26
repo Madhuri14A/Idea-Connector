@@ -1,8 +1,7 @@
 .note-card {
-  background: var(--glass);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid var(--glass-border);
+  --note-tilt: 0deg;
+  background: #fffdf4;
+  border: none;
   border-radius: var(--border-radius);
   padding: 1.5rem;
   display: flex;
@@ -11,13 +10,13 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: var(--glass-shadow);
+  box-shadow: 0 10px 24px rgba(44, 47, 49, 0.08);
+  transform: rotate(var(--note-tilt));
 }
 
 .note-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
-  border-color: rgba(0, 240, 255, 0.3);
+  transform: rotate(0deg) translateY(-4px) scale(1.01);
+  box-shadow: 0 14px 30px rgba(44, 47, 49, 0.12);
 }
 
 .note-card::before {
@@ -25,15 +24,24 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 6px;
   height: 100%;
-  background: transparent;
+  background: rgba(44, 47, 49, 0.06);
   transition: background-color 0.3s;
 }
 
 .note-card:hover::before {
-  background: var(--accent);
+  background: rgba(44, 47, 49, 0.16);
 }
+
+.note-card-yellow { background: #f6ebc0; }
+.note-card-pink { background: #f1dde9; }
+.note-card-green { background: #d1fae5; }
+.note-card-gray { background: #eef1f3; }
+
+.note-rotate-1 { --note-tilt: 1.2deg; }
+.note-rotate-2 { --note-tilt: -0.8deg; }
+.note-rotate-3 { --note-tilt: 0.5deg; }
 
 .note-header {
   display: flex;
@@ -80,8 +88,8 @@
 }
 
 .action-btn:hover {
-  background-color: rgba(0, 240, 255, 0.08);
-  color: var(--accent);
+  background-color: rgba(255, 255, 255, 0.45);
+  color: var(--text-primary);
 }
 
 .action-btn.delete:hover {
@@ -115,19 +123,18 @@
   border-radius: 12px;
   font-size: 0.75rem;
   font-weight: 500;
-  background: rgba(0, 240, 255, 0.08);
-  color: var(--accent);
-  border: 1px solid rgba(0, 240, 255, 0.15);
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-primary);
+  border: none;
   transition: all 0.2s;
 }
 
 .note-tag:hover {
-  background: rgba(0, 240, 255, 0.15);
-  color: var(--accent-hover);
-  border-color: rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text-primary);
 }
 
 .note-tag-more {
-  background: rgba(255,255,255,0.5);
-  color: var(--text-muted);
+  background: rgba(255,255,255,0.72);
+  color: var(--text-primary);
 }

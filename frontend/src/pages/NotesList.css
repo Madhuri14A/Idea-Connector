@@ -21,7 +21,7 @@
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 2rem;
   border-radius: var(--border-radius);
-  border: 1px solid var(--glass-border);
+  border: none;
   box-shadow: var(--glass-shadow);
   flex-wrap: wrap;
   gap: 1.5rem;
@@ -34,14 +34,15 @@
 }
 
 .header-icon-wrapper {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+  background: var(--accent-soft);
   width: 56px;
   height: 56px;
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(128, 131, 255, 0.3);
+  color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .header-title-section h1 {
@@ -64,21 +65,21 @@
   align-items: center;
   gap: 0.5rem;
   background: var(--secondary);
-  color: #0b1326;
-  border: 1px solid rgba(79, 219, 200, 0.55);
+  color: #000;
+  border: none;
   padding: 0.875rem 1.5rem;
   border-radius: 12px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(79, 219, 200, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .btn-create-note:hover {
   background: var(--success);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(79, 219, 200, 0.3);
-  color: #0b1326;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+  color: var(--text-primary);
 }
 
 /* Tools Section (Search) */
@@ -88,7 +89,7 @@
   -webkit-backdrop-filter: blur(20px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
-  border: 1px solid var(--glass-border);
+  border: none;
   box-shadow: var(--glass-shadow);
 }
 
@@ -109,7 +110,7 @@
   padding: 5rem 2rem;
   background: var(--bg-card);
   border-radius: var(--border-radius);
-  border: 2px dashed rgba(128, 131, 255, 0.25);
+  border: none;
   color: var(--text-secondary);
 }
 
@@ -171,13 +172,13 @@
   gap: 0.75rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
+  border-top: none;
 }
 
 .page-btn {
   padding: 0.5rem 1.1rem;
   border-radius: 10px;
-  border: 1px solid var(--border-color);
+  border: none;
   background: var(--glass);
   color: var(--text-secondary);
   font-size: 0.875rem;
@@ -187,7 +188,6 @@
 }
 
 .page-btn:hover:not(:disabled) {
-  border-color: var(--accent);
   color: var(--accent);
   background: var(--bg-hover);
 }
@@ -207,7 +207,7 @@
   width: 36px;
   height: 36px;
   border-radius: 8px;
-  border: 1px solid var(--border-color);
+  border: none;
   background: transparent;
   color: var(--text-secondary);
   font-size: 0.875rem;
@@ -220,15 +220,13 @@
 }
 
 .page-num:hover:not(.active) {
-  border-color: var(--accent);
   color: var(--accent);
   background: var(--bg-hover);
 }
 
 .page-num.active {
   background: var(--secondary);
-  border-color: var(--secondary);
-  color: #0b1326;
+  color: var(--text-primary);
   font-weight: 700;
 }
 

@@ -112,13 +112,14 @@ function NotesList() {
               )}
             </div>
             <div className="modern-notes-grid">
-              {paginatedNotes.map(note => (
+              {paginatedNotes.map((note, idx) => (
                 <NoteCard 
                   key={note.id}
                   note={note}
                   onDelete={handleDelete}
                   onView={() => navigate(`/notes/${note.id}`)}
                   isPendingDelete={false}
+                  cardIndex={(currentPage - 1) * NOTES_PER_PAGE + idx}
                 />
               ))}
             </div>

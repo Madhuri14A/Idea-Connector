@@ -27,6 +27,7 @@ function Ideas() {
   const [loading, setLoading] = useState(false);
   const [generated, setGenerated] = useState(false);
   const [selectedIdea, setSelectedIdea] = useState(null);
+  const [copiedIdeaId, setCopiedIdeaId] = useState(null);
 
   const handleGenerateIdeas = async () => {
     setLoading(true);
@@ -40,6 +41,23 @@ function Ideas() {
       alert('Failed to generate ideas. Make sure you have some notes!');
     } finally {
       setLoading(false);
+    }
+  };
+  const handleCopyIdea = async (idea) => {
+    try{
+      const techText = idea.technologies?.length
+     ? `\nTech: ${idea.technologies.join(', ')}`
+      : '';
+      const textToCopy = `${idea.title}\n\n${idea.description}${techText}`; 
+      await navigator.clipboard.writeText(textToCopy);
+      setCopiedIdeaId(idea.id);
+
+      setTimeout(() => {
+        setCopiedIdeaId(null);
+      }, 1500);
+    }
+    catch(error) {
+      console.error('copy failed:', error);
     }
   };
 
@@ -94,6 +112,18 @@ function Ideas() {
                       <PaperclipIcon size={12} /> {idea.relatedNoteIds.length} related note{idea.relatedNoteIds.length !== 1 ? 's' : ''}
                     </span>
                   )}
+                  <div className="idea-actions">
+<button
+    type="button"
+    className={`btn-copy-idea ${copiedIdeaId === idea.id ? 'copied' : ''}`}
+    onClick={(e) => {
+      e.stopPropagation();
+      handleCopyIdea(idea);
+    }}
+  >
+    {copiedIdeaId === idea.id ? 'Copied' : 'Copy Idea'}
+  </button>
+</div>
                 </div>
               </div>
             ))}

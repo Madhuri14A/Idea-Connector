@@ -102,6 +102,8 @@ function GraphView() {
       clusters: new Set(nodes.flatMap(n => n.tags)).size
     });
 
+    const getNodeRadius = (d) => Math.max(12, d.connections * 2 + 12);
+
     const simulation = d3.forceSimulation(nodes)
       .force('link', d3.forceLink(edges)
         .id(d => d.id)
@@ -114,7 +116,7 @@ function GraphView() {
       )
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collide', d3.forceCollide()
-        .radius(20)
+        .radius(d => getNodeRadius(d) + 8)
         .strength(0.8)
       );
 
@@ -126,7 +128,7 @@ function GraphView() {
       .enter()
       .append('line')
       .attr('class', 'connection-line')
-      .attr('stroke', d => d.createdBy === 'auto' ? '#B0BEC5' : '#EC4899')
+      .attr('stroke', d => d.createdBy === 'auto' ? '#B0BEC5' : '#665761')
       .attr('stroke-width', d => 1 + (d.strength * 1.5))
       .attr('stroke-opacity', 0.65)
       .attr('stroke-dasharray', d => d.createdBy === 'auto' ? '5,4' : 'none')
@@ -160,7 +162,7 @@ function GraphView() {
         d3.select(this).select('.main-circle')
           .transition()
           .duration(200)
-          .attr('r', d => Math.max(7, d.connections * 1.5 + 7) * 1.2)
+          .attr('r', d => getNodeRadius(d) * 1.2)
           .attr('stroke-width', 3);
 
         d3.select(this).select('.glow-circle')
@@ -187,7 +189,7 @@ function GraphView() {
         d3.select(this).select('.main-circle')
           .transition()
           .duration(200)
-          .attr('r', d => Math.max(7, d.connections * 1.5 + 7))
+          .attr('r', d => getNodeRadius(d))
           .attr('stroke-width', 2);
 
         d3.select(this).select('.glow-circle')
@@ -207,7 +209,7 @@ function GraphView() {
     nodeGroups
       .append('circle')
       .attr('class', 'glow-circle')
-      .attr('r', d => Math.max(7, d.connections * 1.5 + 7) + 6)
+      .attr('r', d => getNodeRadius(d) + 6)
       .attr('fill', d => getNodeColor(d))
       .attr('opacity', 0)
       .style('filter', 'blur(8px)');
@@ -215,7 +217,7 @@ function GraphView() {
     nodeGroups
       .append('circle')
       .attr('class', 'main-circle')
-      .attr('r', d => Math.max(7, d.connections * 1.5 + 7))
+      .attr('r', d => getNodeRadius(d))
       .attr('fill', d => getNodeColor(d))
       .attr('stroke', '#fff')
       .attr('stroke-width', 2)
@@ -223,7 +225,7 @@ function GraphView() {
 
     nodeGroups
       .append('circle')
-      .attr('r', d => Math.max(5, d.connections * 1 + 5))
+      .attr('r', d => Math.max(7, getNodeRadius(d) * 0.55))
       .attr('fill', 'white')
       .attr('opacity', 0.3);
 
@@ -232,19 +234,19 @@ function GraphView() {
       .append('circle')
       .attr('class', 'badge-circle')
       .attr('r', 8)
-      .attr('fill', '#EC4899')
+      .attr('fill', '#665761')
       .attr('stroke', '#fff')
       .attr('stroke-width', 1.5)
-      .attr('cx', d => Math.max(7, d.connections * 1.5 + 7) * 0.7)
-      .attr('cy', d => -Math.max(7, d.connections * 1.5 + 7) * 0.7)
+      .attr('cx', d => getNodeRadius(d) * 0.7)
+      .attr('cy', d => -getNodeRadius(d) * 0.7)
       .style('filter', 'drop-shadow(0 1px 3px rgba(0,0,0,0.15))');
 
     nodeGroups
       .filter(d => d.connections > 0)
       .append('text')
       .attr('class', 'badge-text')
-      .attr('x', d => Math.max(7, d.connections * 1.5 + 7) * 0.7)
-      .attr('y', d => -Math.max(7, d.connections * 1.5 + 7) * 0.7)
+      .attr('x', d => getNodeRadius(d) * 0.7)
+      .attr('y', d => -getNodeRadius(d) * 0.7)
       .attr('text-anchor', 'middle')
       .attr('dominant-baseline', 'middle')
       .attr('fill', '#fff')
@@ -302,7 +304,7 @@ function GraphView() {
       nodeGroups.attr('transform', d => `translate(${d.x},${d.y})`);
       
       labelGroups.attr('transform', d => {
-        const offset = Math.max(7, d.connections * 1.5 + 7) + 14;
+        const offset = getNodeRadius(d) + 14;
         return `translate(${d.x},${d.y + offset})`;
       });
     });
@@ -423,7 +425,7 @@ function GraphView() {
                 width: 20, 
                 height: 20, 
                 borderRadius: '50%', 
-                background: 'linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 25%, #45B7D1 50%, #FFA07A 75%, #98D8C8 100%)',
+                background: colorPalette[2],
                 margin: '2px 10px'
               }}></div>
             </div>

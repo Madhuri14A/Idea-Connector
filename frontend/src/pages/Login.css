@@ -4,26 +4,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #070B14;
-  background-image:
-    radial-gradient(ellipse 80% 60% at 8%  5%,  rgba(15, 40, 140, 0.55) 0%, transparent 65%),
-    radial-gradient(ellipse 70% 55% at 92% 92%,  rgba(90, 10, 160, 0.45) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 45% at 85% 8%,   rgba(0, 90, 180, 0.30) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 40% at 15% 85%,  rgba(0, 180, 220, 0.12) 0%, transparent 60%);
+  background-color: var(--bg-main);
+  background-image: none;
   background-attachment: fixed;
 }
 
 .login-card {
-  background: rgba(8, 14, 35, 0.82);
-  backdrop-filter: blur(28px) saturate(200%);
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 3rem 2.5rem;
   border-radius: 24px;
-  box-shadow: 0 24px 64px rgba(0, 240, 255, 0.18), inset 0 1px 0 rgba(0, 240, 255, 0.08);
+  box-shadow: 0 20px 42px rgba(0, 0, 0, 0.10);
   text-align: center;
   max-width: 450px;
   width: 100%;
-  border: 1px solid rgba(0, 240, 255, 0.10);
+  border: none;
   position: relative;
 }
 
@@ -49,12 +45,11 @@
 .form-toggle {
   display: flex;
   gap: 0.5rem;
-  background: rgba(8, 14, 35, 0.50);
-  backdrop-filter: blur(8px);
+  background: #fff;
   padding: 0.4rem;
   border-radius: 10px;
   width: 100%;
-  border: 1px solid rgba(0, 240, 255, 0.12);
+  border: none;
 }
 
 .toggle-btn {
@@ -71,14 +66,14 @@
 }
 
 .toggle-btn.active {
-  background: rgba(0, 240, 255, 0.12);
-  color: var(--accent);
-  border: 1px solid rgba(0, 240, 255, 0.45);
-  box-shadow: 0 3px 10px rgba(0, 240, 255, 0.2);
+  background: var(--accent-soft);
+  color: var(--text-primary);
+  border: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
 .toggle-btn:hover:not(.active) {
-  background: rgba(0, 240, 255, 0.08);
+  background: var(--accent-soft);
   color: var(--accent);
 }
 
@@ -90,10 +85,9 @@ form {
 
 .form-input {
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(0, 240, 255, 0.18);
+  border: none;
   border-radius: 10px;
-  background: rgba(8, 14, 35, 0.55);
-  backdrop-filter: blur(8px);
+  background: #fff;
   color: var(--text-primary);
   font-size: 0.95rem;
   transition: all 0.3s ease;
@@ -102,9 +96,8 @@ form {
 
 .form-input:focus {
   outline: none;
-  border-color: var(--accent);
-  background: rgba(8, 14, 35, 0.90);
-  box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.14);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .form-input::placeholder {
@@ -114,20 +107,20 @@ form {
 .submit-btn {
   padding: 0.75rem 1rem;
   background: var(--secondary);
-  color: #0b1326;
-  border: 1px solid rgba(79, 219, 200, 0.55);
+  color: var(--text-primary);
+  border: none;
   border-radius: 0.5rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.95rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(79, 219, 200, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .submit-btn:hover:not(:disabled) {
   background: var(--success);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(79, 219, 200, 0.3);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
 }
 
 .submit-btn:disabled {

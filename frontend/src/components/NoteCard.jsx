@@ -2,13 +2,18 @@ import React from 'react';
 import './NoteCard.css';
 import { EyeIcon, TrashIcon } from './Icons';
 
-function NoteCard({ note, onDelete, onView, isPendingDelete = false }) {
+function NoteCard({ note, onDelete, onView, isPendingDelete = false, cardIndex = 0 }) {
   const contentPreview = note.content 
     ? (note.content.length > 120 ? note.content.substring(0, 120) + "..." : note.content) 
     : "No content";
 
+  const paperClasses = ['note-card-yellow', 'note-card-pink', 'note-card-green', 'note-card-gray'];
+  const rotateClasses = ['note-rotate-1', 'note-rotate-2', 'note-rotate-3'];
+  const paperClass = paperClasses[cardIndex % paperClasses.length];
+  const rotateClass = rotateClasses[cardIndex % rotateClasses.length];
+
   return (
-    <div className="note-card" onClick={onView}>
+    <div className={`note-card ${paperClass} ${rotateClass}`} onClick={onView}>
       <div className="note-header">
         <h3 className="note-title">{note.title}</h3>
         <div className="note-actions" onClick={(e) => e.stopPropagation()}>

@@ -45,15 +45,15 @@
 
 .btn-generate {
   background: var(--secondary);
-  color: #0b1326;
-  border: 1px solid rgba(79, 219, 200, 0.55);
+  color: #000;
+  border: 1px solid rgba(167, 204, 150, 0.6);
   padding: 0.875rem 2rem;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), 0 0 12px rgba(79, 219, 200, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -62,7 +62,7 @@
 .btn-generate:hover:not(:disabled) {
   background: var(--success);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 20px rgba(79, 219, 200, 0.3);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
 }
 
 .btn-generate:disabled {
@@ -106,7 +106,7 @@
 
 .idea-card.selected {
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px #FDE2E9;
+  box-shadow: 0 0 0 2px var(--primary-light);
   background-color: var(--bg-hover);
 }
 
@@ -202,6 +202,32 @@
   align-items: center;
   gap: 0.3rem;
   font-size: 0.78rem;
+}
+.idea-actions {
+  margin-top: 0.6rem;
+}
+
+.btn-copy-idea {
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copy-idea:hover {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.btn-copy-idea.copied {
+  background: var(--secondary);
+  border-color: var(--secondary);
+  color: #000;
 }
 
 

@@ -15,17 +15,16 @@
   width: 100%;
   padding: 0.625rem 2.5rem 0.625rem 2.5rem;
   font-size: 0.95rem;
-  border: 1px solid var(--border-color);
+  border: none;
   border-radius: 8px;
   outline: none;
-  background: var(--bg-main);
+  background: var(--bg-card);
   color: var(--text-primary);
   transition: all 0.2s ease;
 }
 
 .search-input:focus {
-  border-color: var(--primary);
-  background: rgba(8, 14, 35, 0.92);
+  background: var(--bg-card);
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
@@ -54,11 +53,11 @@
 
 .sort-select {
   padding: 0.625rem 1rem;
-  border: 1px solid var(--border-color);
+  border: none;
   border-radius: 8px;
   font-size: 0.95rem;
   cursor: pointer;
-  background: rgba(8, 14, 35, 0.6);
+  background: var(--bg-card);
   color: var(--text-primary);
   transition: all 0.2s ease;
   min-width: 140px;
@@ -66,20 +65,18 @@
 }
 
 .sort-select:hover {
-  border-color: var(--primary);
-  background: rgba(8, 14, 35, 0.8);
-  color: var(--accent);
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .sort-select:focus {
   outline: none;
-  border-color: var(--primary);
-  background: rgba(8, 14, 35, 0.85);
+  background: var(--bg-card);
   box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .sort-select option {
-  background: var(--bg-sidebar);
+  background: var(--bg-card);
   color: var(--text-primary);
 }
 

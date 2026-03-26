@@ -58,15 +58,6 @@ function Dashboard({ isAuthenticated }) {
     fetchData();
   }, [isAuthenticated]);
 
-  const getTagColor = (tag) => {
-    const colors = {
-      'react': '#61DAFB', 'javascript': '#F7DF1E', 'blockchain': '#627EEA',
-      'go': '#00ADD8', 'css': '#1572B6', 'python': '#3776AB',
-      'ai': '#FF6B6B', 'database': '#4ECDC4', 'neo4j': '#007FBA'
-    };
-    return colors[tag?.toLowerCase()] || '#6366F1';
-  };
-
   const localDateStr = (date) => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -269,7 +260,7 @@ function Dashboard({ isAuthenticated }) {
                   <button className="quick-link" onClick={() => navigate('/ideas')}>
                     <LightbulbIcon size={15} /> Idea Generator
                   </button>
-                  <button className="quick-link" onClick={() => navigate('/weaver')}>
+                  <button className="quick-link" onClick={() => navigate('/ideas')}>
                     <WandIcon size={15} /> Idea Weaver
                   </button>
                 </div>
@@ -279,7 +270,7 @@ function Dashboard({ isAuthenticated }) {
 
         </div>
 
-        {/* ── Bottom: Recent Notes full width ── */}
+      
         <div className="dash-recent-section">
           <div className="dash-section-header">
             <h2 className="dash-section-title">Recent Notes</h2>
@@ -290,17 +281,14 @@ function Dashboard({ isAuthenticated }) {
 
           {notes.length > 0 ? (
             <div className="notes-list">
-              {notes.map(note => (
+              {notes.map((note, idx) => (
                 <div
                   key={note.id}
-                  className="note-card-modern"
+                  className={`note-card-modern note-card-paper-${idx % 4} note-tilt-${idx % 3}`}
                   onClick={() => navigate(`/notes/${note.id}`)}
                 >
                   <div className="note-header">
-                    <div
-                      className="note-indicator"
-                      style={{ backgroundColor: getTagColor(note.tags?.[0]) }}
-                    />
+                    <div className="note-indicator" />
                     <h3>{note.title}</h3>
                   </div>
                   <p className="note-content">
@@ -309,11 +297,7 @@ function Dashboard({ isAuthenticated }) {
                   <div className="note-footer">
                     <div className="note-tags">
                       {note.tags?.slice(0, 3).map(tag => (
-                        <span
-                          key={tag}
-                          className="tag-pill"
-                          style={{ backgroundColor: getTagColor(tag) + '20', color: getTagColor(tag) }}
-                        >
+                        <span key={tag} className="tag-pill">
                           #{tag}
                         </span>
                       ))}

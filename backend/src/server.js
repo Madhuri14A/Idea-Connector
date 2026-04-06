@@ -4,6 +4,7 @@ const driver = require('../config/neo4j');
 const authMiddleware = require('../middleware/auth');
 
 const app = express();
+app.set('trust proxy', 1);
 
 const envOrigins = (process.env.CORS_ORIGIN || '')
   .split(',')

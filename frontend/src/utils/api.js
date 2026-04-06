@@ -33,6 +33,9 @@ export const loginUser = (data) => api.post('/auth/login', data);
 export const registerUser = (data) => api.post('/auth/register', data);
 export const requestPasswordReset = (email) => api.post('/auth/forgot-password', { email });
 export const resetPassword = (data) => api.post('/auth/reset-password', data);
+export const getMyProfile = () => api.get('/auth/me');
+export const updateMyProfile = (data) => api.put('/auth/profile', data);
+export const updateMyPassword = (data) => api.put('/auth/password', data);
 
 // Notes
 export const getNotes = () => api.get('/notes');

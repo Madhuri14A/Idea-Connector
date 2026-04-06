@@ -6,6 +6,7 @@ import {
   Share2Icon, 
   LightbulbIcon, 
   PlusIcon,
+  SettingsIcon,
   LogOutIcon,
   UserIcon
 } from './Icons';
@@ -81,6 +82,15 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
           >
             <PlusIcon className="nav-link-icon" />
             <span>Add Note</span>
+          </NavLink>
+
+          <NavLink
+            to="/settings"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            onClick={onClose}
+          >
+            <SettingsIcon className="nav-link-icon" />
+            <span>Settings</span>
           </NavLink>
         </nav>
 

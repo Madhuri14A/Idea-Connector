@@ -12,6 +12,7 @@ import NoteDetail from './pages/NoteDetail';
 import Ideas from './pages/Ideas';
 import Login from './pages/Login';
 import ResetPassword from './pages/ResetPassword';
+import Settings from './pages/Settings';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -79,6 +80,7 @@ function App() {
                 <Route path="/notes/:id" element={isAuthenticated ? <NoteDetail /> : <Navigate to="/login" replace />} />
                 <Route path="/graph" element={isAuthenticated ? <GraphView /> : <Navigate to="/login" replace />} />
                 <Route path="/ideas" element={isAuthenticated ? <Ideas /> : <Login redirectTo="/ideas" onLogin={handleLogin} />} />
+                <Route path="/settings" element={isAuthenticated ? <Settings onUserUpdate={setUser} /> : <Navigate to="/login" replace />} />
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
               </Routes>

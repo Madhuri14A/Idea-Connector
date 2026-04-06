@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
 const driver = require('../config/neo4j');
 const { sendResetEmail } = require('../utils/emailService');
+const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -30,6 +31,11 @@ const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
 const validatePassword = (password) => {
   return password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password);
+};
+
+const validatePhone = (phone) => {
+  if (!phone) return true;
+  return /^\+?[1-9]\d{7,14}$/.test(phone);
 };
 
 router.post('/google', authLimiter, async (req, res) => {
@@ -211,7 +217,7 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
     return res.status(400).json({ error: 'Valid email is required' });
   }
 
-  if (!process.env.EMAIL_USER || process.env.EMAIL_USER.includes('your_gmail')) {
+  if (!process.env.RESEND_API_KEY || process.env.RESEND_API_KEY.includes('re_xxx')) {
     return res.status(503).json({ error: 'Email service is not configured on this server. Contact the administrator.' });
   }
 
@@ -300,6 +306,142 @@ router.post('/reset-password', authLimiter, async (req, res) => {
   } catch (error) {
     console.error('Reset password error:', error);
     res.status(500).json({ error: 'Failed to reset password' });
+  } finally {
+    await session.close();
+  }
+});
+
+router.get('/me', authMiddleware, async (req, res) => {
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      `MATCH (u:User {email: $email}) RETURN u`,
+      { email: req.userId }
+    );
+
+    if (result.records.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = result.records[0].get('u').properties;
+    res.json({
+      email: user.email,
+      name: user.name || '',
+      phone: user.phone || '',
+      authType: user.authType || (user.password ? 'local' : 'google')
+    });
+  } catch (error) {
+    console.error('Fetch profile error:', error);
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  } finally {
+    await session.close();
+  }
+});
+
+router.put('/profile', authMiddleware, async (req, res) => {
+  const { name, phone } = req.body;
+
+  if (!name || name.trim().length < 2 || name.trim().length > 50) {
+    return res.status(400).json({ error: 'Name must be between 2 and 50 characters' });
+  }
+
+  const normalizedPhone = (phone || '').trim();
+  if (!validatePhone(normalizedPhone)) {
+    return res.status(400).json({ error: 'Phone number must be in international format (e.g. +919876543210)' });
+  }
+
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      `MATCH (u:User {email: $email})
+       SET u.name = $name,
+           u.phone = CASE WHEN $phone = '' THEN null ELSE $phone END,
+           u.updatedAt = datetime()
+       RETURN u`,
+      {
+        email: req.userId,
+        name: name.trim(),
+        phone: normalizedPhone
+      }
+    );
+
+    if (result.records.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = result.records[0].get('u').properties;
+    const token = jwt.sign(
+      { userId: user.email, name: user.name },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      message: 'Profile updated successfully',
+      token,
+      user: {
+        email: user.email,
+        name: user.name || '',
+        phone: user.phone || '',
+        authType: user.authType || (user.password ? 'local' : 'google')
+      }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  } finally {
+    await session.close();
+  }
+});
+
+router.put('/password', authMiddleware, authLimiter, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Current password and new password are required' });
+  }
+
+  if (!validatePassword(newPassword)) {
+    return res.status(400).json({
+      error: 'Password must be at least 8 characters, contain an uppercase letter and a number'
+    });
+  }
+
+  const session = driver.session();
+  try {
+    const result = await session.run(
+      `MATCH (u:User {email: $email}) RETURN u`,
+      { email: req.userId }
+    );
+
+    if (result.records.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = result.records[0].get('u').properties;
+    if (!user.password) {
+      return res.status(400).json({ error: 'Google accounts cannot change password here' });
+    }
+
+    const isValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Current password is incorrect' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await session.run(
+      `MATCH (u:User {email: $email})
+       SET u.password = $password,
+           u.updatedAt = datetime()
+       RETURN u`,
+      { email: req.userId, password: hashedPassword }
+    );
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ error: 'Failed to update password' });
   } finally {
     await session.close();
   }

@@ -85,6 +85,13 @@ function Dashboard({ isAuthenticated }) {
 
   const activityData = getActivityData();
   const maxActivity = Math.max(...activityData.map(d => d.count), 1);
+  const activityScaleBase = Math.max(maxActivity, 4);
+
+  const getActivityHeight = (count) => {
+    if (count <= 0) return 0;
+    const scaled = (count / activityScaleBase) * 100;
+    return Math.max(18, Math.min(100, scaled));
+  };
 
   const ideaGenVisited = localStorage.getItem('ideaGeneratorVisited') === 'true';
 
@@ -210,7 +217,7 @@ function Dashboard({ isAuthenticated }) {
                   <div className="activity-bar-wrap">
                     <div
                       className="activity-bar"
-                      style={{ height: `${(day.count / maxActivity) * 100}%` }}
+                      style={{ height: `${getActivityHeight(day.count)}%` }}
                       title={`${day.count} note${day.count !== 1 ? 's' : ''}`}
                     >
                       {day.count > 0 && <span className="activity-count">{day.count}</span>}

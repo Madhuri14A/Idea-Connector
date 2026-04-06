@@ -106,11 +106,11 @@ const IdeaWeaver = ({ idea, onClose }) => {
     <div className="weaver-container">
       <div className="weaver-header">
         <h3><WandIcon size={16} /> Idea Weaver {loading ? '...' : ''}</h3>
-        <div style={{display: 'flex', gap: '0.5rem'}}>
+        <div className="weaver-header-actions">
           <button className="clear-btn" onClick={clearHistory} disabled={messages.length === 0}>
             Clear
           </button>
-          <button className="clear-btn" onClick={onClose} style={{background: 'rgba(255,0,0,0.2)', borderColor: 'rgba(255,0,0,0.3)'}}>
+          <button className="close-btn" onClick={onClose}>
             ✕
           </button>
         </div>
@@ -118,7 +118,7 @@ const IdeaWeaver = ({ idea, onClose }) => {
 
       <div className="weaver-tabs">
         {error && (
-            <p style={{ color: '#ef4444', fontSize: '0.8rem', padding: '0.5rem 1rem', background: 'rgba(239,68,68,0.08)', borderRadius: '6px', margin: '0 0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <p className="weaver-error">
             <AlertTriangleIcon size={14} /> {error}
           </p>
         )}

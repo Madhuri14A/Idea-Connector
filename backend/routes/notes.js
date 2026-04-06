@@ -7,9 +7,7 @@ const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const router = express.Router();
 
-// Neo4j returns datetime() as a DateTime object, not a string.
-// res.json() serializes it as {year:{low:2026,...}} which frontend can't parse.
-// Convert to ISO string here before it leaves the backend.
+
 const serializeDateTime = (val) => {
   if (!val) return null;
   if (typeof val === 'string') return val;
@@ -116,7 +114,7 @@ router.get('/search/query', async (req, res) => {
     if (sort === 'oldest') {
       query += ` ORDER BY n.createdAt ASC`;
     } else if (sort === 'alphabetical') {
-      query += ` ORDER BY n.title ASC`;
+      query += ` ORDER BY toLower(coalesce(n.title, '')) ASC, n.title ASC`;
     } else {
       query += ` ORDER BY n.createdAt DESC`;
     }

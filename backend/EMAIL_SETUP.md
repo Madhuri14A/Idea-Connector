@@ -1,37 +1,30 @@
 # Email Setup Guide for Password Reset
 
-To enable email sending for password reset functionality, follow these steps:
+This app uses **Resend** for sending transactional emails.
+Free tier: **3,000 emails/month, 100/day** — no credit card needed.
 
-## Option 1: Gmail (Recommended for Testing)
+## Setup Steps
 
-1. **Enable 2-Factor Authentication** on your Gmail account:
-   - Go to https://myaccount.google.com/security
-   - Enable "2-Step Verification"
+1. **Create a free Resend account**
+   - Go to https://resend.com and sign up
 
-2. **Create an App Password**:
-   - Go to https://myaccount.google.com/apppasswords
-   - Select "Mail" and "Windows Computer" (or your device)
-   - Google will generate a 16-character password
+2. **Get your API key**
+   - Dashboard → API Keys → Create API Key
+   - Copy the key (it starts with `re_`)
 
-3. **Update `.env` file**:
+3. **Add a From address** *(for testing — skip domain setup)*
+   - For local dev, you can use `onboarding@resend.dev` as the from address
+   - For production, verify your own domain at Dashboard → Domains
+
+4. **Update your `.env` file**:
    ```
-   EMAIL_USER=your-email@gmail.com
-   EMAIL_PASSWORD=generated-16-char-password
+   RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxx
+   RESEND_FROM_EMAIL=IdeaConnector <you@yourdomain.com>
    FRONTEND_URL=http://localhost:3001
    ```
 
-4. **Install nodemailer** (if not already installed):
-   ```bash
-   npm install nodemailer
-   ```
-
-## Option 2: Other Email Services
-
-You can modify `backend/utils/emailService.js` to use:
-- SendGrid
-- Mailgun
-- AWS SES
-- Or any other service supported by nodemailer
+   > During development, leave `RESEND_FROM_EMAIL` empty or use `onboarding@resend.dev`.
+   > Resend will deliver to your own email even without a verified domain in test mode.
 
 ## Testing Password Reset
 
@@ -41,4 +34,4 @@ You can modify `backend/utils/emailService.js` to use:
 4. Click the link in the email
 5. Reset your password
 
-**Note:** Make sure `FRONTEND_URL` in `.env` matches where your frontend is running (usually http://localhost:3001 for development).
+**Note:** Make sure `FRONTEND_URL` in `.env` matches where your frontend is running (usually `http://localhost:3001` for development).

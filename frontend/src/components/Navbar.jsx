@@ -50,12 +50,20 @@ function Navbar({ isAuthenticated, onLogout, user, toggleSidebar }) {
 
       <div className="header-right">
         {isAuthenticated ? (
-          <div className="user-mini-profile">
+          <div className="user-mini-profile" onClick={() => navigate('/settings')}>
              <div className="avatar-small">
                {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={20} />}
              </div>
              <span className="user-name-small">{user?.name || 'User'}</span>
-             <button onClick={handleLogout} className="btn-icon-only" title="Logout" style={{background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', marginLeft: '0.5rem'}}>
+             <button
+               onClick={(e) => {
+                 e.stopPropagation();
+                 handleLogout();
+               }}
+               className="btn-icon-only"
+               title="Logout"
+               style={{background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', marginLeft: '0.5rem'}}
+             >
                <LogOutIcon size={18} />
              </button>
           </div>

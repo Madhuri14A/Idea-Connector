@@ -34,6 +34,11 @@
   letter-spacing: -0.01em;
 }
 
+.sidebar-logo span {
+  font-family: 'Lacquer', cursive;
+  font-weight: 400;
+}
+
 .logo-icon {
   width: 36px;
   height: 36px;

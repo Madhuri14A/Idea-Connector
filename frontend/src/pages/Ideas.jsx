@@ -31,6 +31,11 @@ function Ideas({ isGuest = false }) {
   const [selectedIdea, setSelectedIdea] = useState(null);
   const [copiedIdeaId, setCopiedIdeaId] = useState(null);
 
+  const handleSelectIdea = (idea) => {
+    setSelectedIdea(idea);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleGenerateIdeas = async () => {
     setLoading(true);
     try {
@@ -100,7 +105,7 @@ function Ideas({ isGuest = false }) {
               <div 
                 key={idea.id} 
                 className={`idea-card idea-${idea.type || 'default'} ${selectedIdea?.id === idea.id ? 'selected' : ''}`}
-                onClick={() => setSelectedIdea(idea)}
+                onClick={() => handleSelectIdea(idea)}
               >
                 <div className="idea-type-row">
                   <span className="idea-type-badge">{getTypeLabel(idea.type)}</span>
@@ -147,7 +152,12 @@ function Ideas({ isGuest = false }) {
           </div>
           
           {selectedIdea && (
-            <IdeaWeaver idea={selectedIdea} onClose={() => setSelectedIdea(null)} />
+            <IdeaWeaver
+              idea={selectedIdea}
+              onClose={() => {
+                setSelectedIdea(null);
+              }}
+            />
           )}
         </div>
       ) : generated && ideas.length === 0 ? (

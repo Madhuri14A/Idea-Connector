@@ -6,7 +6,7 @@ import {
 } from './Icons';
 import './IdeaWeaver.css';
 
-const IdeaWeaver = ({ idea, onClose }) => {
+const IdeaWeaver = ({ idea, onClose, position }) => {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -21,6 +21,17 @@ const IdeaWeaver = ({ idea, onClose }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Lock background scroll on mobile while panel is open
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px)');
+    if (mq.matches) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
 
   const actions = [
     { type: 'EXPLAIN', label: 'Explain', Icon: BookOpenIcon },
@@ -102,15 +113,21 @@ const IdeaWeaver = ({ idea, onClose }) => {
     );
   }
 
+  const weaverStyle = position
+    ? { top: `${position.top}px`, left: `${position.left}px`, right: 'auto', bottom: 'auto' }
+    : undefined;
+
   return (
-    <div className="weaver-container">
+    <>
+    <div className="weaver-mobile-backdrop" onClick={onClose} />
+    <div className={`weaver-container ${position ? 'anchored' : ''}`} style={weaverStyle}>
       <div className="weaver-header">
         <h3><WandIcon size={16} /> Idea Weaver {loading ? '...' : ''}</h3>
         <div className="weaver-header-actions">
-          <button className="clear-btn" onClick={clearHistory} disabled={messages.length === 0}>
+          <button className="weaver-clear-btn" onClick={clearHistory} disabled={messages.length === 0}>
             Clear
           </button>
-          <button className="close-btn" onClick={onClose}>
+          <button className="weaver-close-btn" onClick={onClose}>
             ✕
           </button>
         </div>
@@ -198,6 +215,7 @@ const IdeaWeaver = ({ idea, onClose }) => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

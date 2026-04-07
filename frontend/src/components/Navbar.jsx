@@ -62,9 +62,9 @@ function Navbar({ isAuthenticated, onLogout, user, toggleSidebar }) {
                  e.stopPropagation();
                  handleLogout();
                }}
-               className="btn-icon-only"
+               className="btn-icon-only logout-mini-btn"
                title="Logout"
-               style={{background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', display: 'flex', marginLeft: '0.5rem'}}
+               style={{background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', marginLeft: '0.5rem'}}
              >
                <LogOutIcon size={18} />
              </button>

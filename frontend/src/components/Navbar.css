@@ -182,11 +182,40 @@
 
 @media (max-width: 768px) {
   .top-header {
-    padding: 0 1rem;
+    padding: 0 0.65rem;
+  }
+
+  .header-left {
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .navbar-logo {
+    gap: 0.3rem;
+  }
+
+  .navbar-logo .logo-word-idea,
+  .navbar-logo .logo-word-connector {
+    font-size: 1rem;
+  }
+
+  .header-right {
+    gap: 0.35rem;
+  }
+
+  .user-mini-profile {
+    gap: 0.35rem;
+    padding: 0.15rem 0.2rem;
+  }
+
+  .user-name-small,
+  .logout-mini-btn {
+    display: none !important;
   }
   
   .menu-toggle {
     display: flex;
+    padding: 0.35rem;
   }
   
   .mobile-logo {

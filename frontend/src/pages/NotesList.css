@@ -115,9 +115,12 @@
 }
 
 .empty-icon-large {
-  font-size: 4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 1.5rem;
-  opacity: 0.5;
+  color: var(--tag-blockchain);
+  opacity: 0.85;
 }
 
 .empty-notes-state h3 {

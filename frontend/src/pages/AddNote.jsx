@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { createNote } from '../utils/api';
-import { useNavigate } from 'react-router-dom';
+import { addGuestNote, getGuestNotes, GUEST_LIMIT } from '../utils/guestNotes';
+import { useNavigate, Link } from 'react-router-dom';
+import { FileTextIcon } from '../components/Icons';
+import GuestBanner from '../components/GuestBanner';
 import './AddNote.css';
 
-function AddNote() {
+function AddNote({ isGuest = false }) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const guestNotes = isGuest ? getGuestNotes() : [];
+  const guestLimitReached = isGuest && guestNotes.length >= GUEST_LIMIT;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,16 +25,21 @@ function AddNote() {
       return; 
     }
     setError('');
-
     setLoading(true);
     try {
       const tagArray = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
-      await createNote({
-        title,
-        content,
-        tags: tagArray
-      });
-      navigate('/notes');
+      if (isGuest) {
+        const result = addGuestNote({ title: title.trim(), content: content.trim(), tags: tagArray });
+        if (!result) {
+          setError('Please sign in to continue adding more notes.');
+          setLoading(false);
+          return;
+        }
+        navigate('/try');
+      } else {
+        await createNote({ title, content, tags: tagArray });
+        navigate('/notes');
+      }
     } catch (error) {
       console.error('Error creating note:', error);
       setError('Failed to create note. Please try again.');
@@ -37,11 +48,29 @@ function AddNote() {
     }
   };
 
+  if (guestLimitReached) {
+    return (
+      <div className="add-note">
+        <div className="form-container">
+          <GuestBanner currentPage="notes" />
+          <div className="guest-limit-gate">
+            <div className="gate-icon" aria-hidden="true"><FileTextIcon size={34} /></div>
+            <h2>Continue with a free account</h2>
+            <p>Sign in to create unlimited notes, connect them automatically, and get AI suggestions.</p>
+            <Link to="/login" className="btn btn-primary">Sign in to continue</Link>
+            <Link to="/try" className="gate-back-link">← Back to my trial notes</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="add-note">
       <div className="form-container">
+        {isGuest && <GuestBanner currentPage="notes" />}
         <h1>Create New Note</h1>
-        {error && <p style={{ color: '#ef4444', margin: '0.5rem 0 1rem', fontSize: '0.875rem', background: '#fef2f2', padding: '0.75rem', borderRadius: '6px', border: '1px solid #fecaca' }}>{error}</p>}
+        {error && <p className="form-error">{error}</p>}
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
@@ -78,9 +107,9 @@ function AddNote() {
 
           <div className="form-actions">
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Note'}
+              {loading ? 'Saving...' : 'Save Note'}
             </button>
-            <button type="button" className="btn btn-secondary" onClick={() => navigate('/notes')}>
+            <button type="button" className="btn btn-secondary" onClick={() => navigate(isGuest ? '/try' : '/notes')} disabled={loading}>
               Cancel
             </button>
           </div>

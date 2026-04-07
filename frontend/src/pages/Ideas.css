@@ -3,6 +3,40 @@
   /* Remove fixed height/margin as wrapper handles it */
 }
 
+.ideas-guest-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  gap: 1rem;
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.ideas-gate-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tag-blockchain);
+  opacity: 0.9;
+}
+
+.ideas-guest-gate h2 {
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  font-weight: 700;
+  margin: 0;
+}
+
+.ideas-guest-gate p {
+  color: var(--text-secondary);
+  max-width: 360px;
+  line-height: 1.55;
+  margin: 0;
+}
+
 .ideas-header {
   text-align: center;
   margin-bottom: 3rem;

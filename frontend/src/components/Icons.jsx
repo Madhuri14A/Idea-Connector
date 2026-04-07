@@ -172,6 +172,43 @@ export const NetworkIcon = (props) => (
   </IconBase>
 );
 
+export const BrandLogoIcon = ({ size = 24, color = "currentColor", className = "" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    className={className}
+  >
+    {/* ── BACK bubble — upper-right
+        Left-cap center (12,9), right-cap center (18,9), r=4
+        Body spans x:8–22, y:5–13
+        Tail: from right-cap-bottom (18,13) → tip (22,17) → return (15,13)
+              = proper triangle tail pointing lower-right                      */}
+    <path
+      d="M 12 5 L 18 5 A 4 4 0 0 1 18 13 L 22 17 L 15 13 L 12 13 A 4 4 0 0 1 12 5 Z"
+      fill="white" stroke={color} strokeWidth="1.1" strokeLinejoin="round"
+    />
+    {/* ── FRONT bubble — lower-left, drawn ON TOP
+        Left-cap center (6,15), right-cap center (12,15), r=4
+        Body spans x:2–16, y:11–19
+        ★ Overlap zone with back: x:8–16, y:11–13
+          Front's white fill paints over back's interior in this zone →
+          back bubble's bottom border vanishes behind front = chain-link depth
+        Tail: (9,19) → tip (2,22) → return (6,19) = left-cap bottom
+              = proper triangle tail pointing lower-left                        */}
+    <path
+      d="M 6 11 L 12 11 A 4 4 0 0 1 12 19 L 9 19 L 2 22 L 6 19 A 4 4 0 0 1 6 11 Z"
+      fill="white" stroke={color} strokeWidth="1.1" strokeLinejoin="round"
+    />
+    {/* Three muted dots inside front bubble (center x=9, y=15) */}
+    <circle cx="7"  cy="15" r="1.1" fill="#C97080" />
+    <circle cx="9"  cy="15" r="1.1" fill="#5EA8A3" />
+    <circle cx="11" cy="15" r="1.1" fill="#5898B0" />
+  </svg>
+);
+
 export const SettingsIcon = (props) => (
   <IconBase {...props}>
     <circle cx="12" cy="12" r="3"/>

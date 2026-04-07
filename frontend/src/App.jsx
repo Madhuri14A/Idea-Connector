@@ -58,6 +58,7 @@ function App() {
           onClose={() => setSidebarOpen(false)} 
           user={user}
           onLogout={handleLogout}
+          isAuthenticated={isAuthenticated}
         />
         
         <div className="main-content">
@@ -83,6 +84,11 @@ function App() {
                 <Route path="/settings" element={isAuthenticated ? <Settings onUserUpdate={setUser} /> : <Navigate to="/login" replace />} />
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
+                {/* Guest / trial routes - no auth required */}
+                <Route path="/try" element={<NotesList isGuest />} />
+                <Route path="/try/notes/new" element={<AddNote isGuest />} />
+                <Route path="/try/graph" element={<GraphView isGuest />} />
+                <Route path="/try/ideas" element={<Ideas isGuest />} />
               </Routes>
             </div>
           </ErrorBoundary>

@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { getNotes, rebuildConnections } from '../utils/api';
+import { getGuestNotes, computeGuestConnections } from '../utils/guestNotes';
+import GuestBanner from '../components/GuestBanner';
 import { parseDate } from '../utils/date';
 import { NetworkIcon } from '../components/Icons';
 import './GraphView.css';
 
-function GraphView() {
+function GraphView({ isGuest = false }) {
   const svgRef = useRef();
   const [selectedNote, setSelectedNote] = useState(null);
   const [hoveredNote, setHoveredNote] = useState(null);
@@ -52,6 +54,12 @@ function GraphView() {
 
   const fetchAndRender = async () => {
     try {
+      if (isGuest) {
+        const rawNotes = getGuestNotes();
+        const notesWithConnections = computeGuestConnections(rawNotes);
+        drawClearGraph(notesWithConnections);
+        return;
+      }
       const res = await getNotes();
       const notes = res.data;
       drawClearGraph(notes);
@@ -329,11 +337,16 @@ function GraphView() {
 
   return (
     <div className="graph-view">
+      {isGuest && (
+        <div style={{ padding: '1rem 1rem 0' }}>
+          <GuestBanner currentPage="graph" />
+        </div>
+      )}
       <div className="graph-header">
         <div className="header-content">
           <div className="header-title">
             <h1>Knowledge Graph</h1>
-            <p className="header-subtitle">Visualize connections between your ideas</p>
+            <p className="header-subtitle">{isGuest ? 'See how your trial notes connect' : 'Visualize connections between your ideas'}</p>
           </div>
           <div className="graph-stats">
             <div className="stat-item">
@@ -358,12 +371,14 @@ function GraphView() {
           </svg>
           Refresh
         </button>
-        <button onClick={handleRebuildConnections} className="btn-refresh" disabled={rebuilding} title="Recalculate all connections with updated logic">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-          </svg>
-          {rebuilding ? 'Rebuilding...' : 'Rebuild Connections'}
-        </button>
+        {!isGuest && (
+          <button onClick={handleRebuildConnections} className="btn-refresh" disabled={rebuilding} title="Recalculate all connections with updated logic">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+            {rebuilding ? 'Rebuilding...' : 'Rebuild Connections'}
+          </button>
+        )}
       </div>
 
       {hoveredNote && (

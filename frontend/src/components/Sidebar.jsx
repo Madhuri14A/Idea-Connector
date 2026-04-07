@@ -4,6 +4,7 @@ import {
   HomeIcon, 
   FileTextIcon, 
   Share2Icon, 
+  BrandLogoIcon,
   LightbulbIcon, 
   PlusIcon,
   SettingsIcon,
@@ -12,7 +13,13 @@ import {
 } from './Icons';
 import './Sidebar.css';
 
-const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
+const Sidebar = ({ isOpen, onClose, user, onLogout, isAuthenticated }) => {
+  const notesPath = isAuthenticated ? '/notes' : '/try';
+  const graphPath = isAuthenticated ? '/graph' : '/try/graph';
+  const ideasPath = isAuthenticated ? '/ideas' : '/try/ideas';
+  const addNotePath = isAuthenticated ? '/notes/new' : '/try/notes/new';
+  const settingsPath = isAuthenticated ? '/settings' : '/login';
+
   return (
     <>
       {}
@@ -26,9 +33,11 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
       <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
         <NavLink to="/" className="sidebar-logo">
           <div className="logo-icon">
-            <LightbulbIcon size={20} color="white" />
+            <BrandLogoIcon size={30} color="#111111" />
           </div>
-          <span>IdeaConnector</span>
+          <span className="logo-wordmark">
+            <span className="logo-word-idea">idea</span><span className="logo-word-connector">Connector</span>
+          </span>
         </NavLink>
 
         <nav className="nav-section">
@@ -46,7 +55,7 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
           </NavLink>
           
           <NavLink 
-            to="/notes" 
+            to={notesPath}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             end
             onClick={onClose}
@@ -56,7 +65,7 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
           </NavLink>
 
           <NavLink 
-            to="/graph" 
+            to={graphPath}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >
@@ -65,7 +74,7 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
           </NavLink>
 
           <NavLink 
-            to="/ideas" 
+            to={ideasPath}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >
@@ -76,7 +85,7 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
           <div className="nav-label" style={{ marginTop: '1.5rem' }}>Actions</div>
           
           <NavLink 
-            to="/notes/new" 
+            to={addNotePath}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >
@@ -85,7 +94,7 @@ const Sidebar = ({ isOpen, onClose, user, onLogout }) => {
           </NavLink>
 
           <NavLink
-            to="/settings"
+            to={settingsPath}
             className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
             onClick={onClose}
           >

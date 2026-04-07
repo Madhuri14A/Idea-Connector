@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { getNotes, deleteNote, searchNotes } from '../utils/api';
+import { getGuestNotes, deleteGuestNote } from '../utils/guestNotes';
+import GuestBanner from '../components/GuestBanner';
 import SearchBar from '../components/SearchBar';
 import { Link, useNavigate } from 'react-router-dom';
 import { PlusIcon, FileTextIcon } from '../components/Icons';
 import './NotesList.css';
 import NoteCard from '../components/NoteCard';
 
-function NotesList() {
+function NotesList({ isGuest = false }) {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -17,6 +19,7 @@ function NotesList() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (isGuest) return;
     const timer = setTimeout(() => {
       const { q, tags, sort } = searchParams;
       if (q || tags || sort !== 'recent') {
@@ -28,6 +31,12 @@ function NotesList() {
 
     return () => clearTimeout(timer);
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!isGuest) return;
+    setNotes(getGuestNotes());
+    setLoading(false);
+  }, [isGuest]);
 
   const fetchNotes = async () => {
     try {
@@ -61,6 +70,11 @@ function NotesList() {
 
   const handleDelete = async (id) => {
     try {
+      if (isGuest) {
+        deleteGuestNote(id);
+        setNotes(prev => prev.filter(note => note.id !== id));
+        return;
+      }
       await deleteNote(id);
       setNotes(prevNotes => prevNotes.filter(note => note.id !== id));
     } catch (error) {
@@ -80,6 +94,7 @@ function NotesList() {
 
   return (
     <div className="notes-page-container">
+      {isGuest && <GuestBanner currentPage="notes" />}
       <div className="notes-page-header">
         <div className="header-title-section">
           <div className="header-icon-wrapper">
@@ -87,20 +102,22 @@ function NotesList() {
           </div>
           <div>
             <h1>My Notes</h1>
-            <p className="subtitle">Manage and organize your knowledge base</p>
+            <p className="subtitle">{isGuest ? 'Organize here' : 'Manage and organize your notes'}</p>
           </div>
         </div>
         
-        <Link to="/notes/new" className="btn-create-note">
+        <Link to={isGuest ? '/try/notes/new' : '/notes/new'} className="btn-create-note">
           <PlusIcon size={20} />
           <span>New Note</span>
         </Link>
       </div>
 
-      <div className="notes-tools-section">
-        <SearchBar onSearch={handleSearch} searchParams={searchParams} />
-        {searching && <p className="subtitle">Searching...</p>}
-      </div>
+      {!isGuest && (
+        <div className="notes-tools-section">
+          <SearchBar onSearch={handleSearch} searchParams={searchParams} />
+          {searching && <p className="subtitle">Searching...</p>}
+        </div>
+      )}
       
       <div className="notes-content">
         {notes.length > 0 ? (
@@ -155,10 +172,10 @@ function NotesList() {
           </>
         ) : (
           <div className="empty-notes-state">
-            <div className="empty-icon-large">📄</div>
+            <div className="empty-icon-large" aria-hidden="true"><FileTextIcon size={40} /></div>
             <h3>No notes found</h3>
             <p>You haven't created any notes that match this criteria yet.</p>
-            <Link to="/notes/new" className="btn-create-note">
+            <Link to={isGuest ? '/try/notes/new' : '/notes/new'} className="btn-create-note">
               <PlusIcon size={20} />
               <span>Create Your First Note</span>
             </Link>

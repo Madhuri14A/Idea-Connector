@@ -120,19 +120,20 @@ function Dashboard({ isAuthenticated }) {
         <div className="landing-hero">
           <div className="landing-badge">
             <SparkleIcon size={13} />
-            AI-powered knowledge base
+            Smart notes that stay connected
           </div>
           <h1 className="landing-headline">
-            Your ideas deserve<br />
-            <span className="landing-accent">better connections</span>
+            Keep your notes in one place<br />
+            <span className="landing-accent">and make sense of them</span>
           </h1>
           <p className="landing-sub">
-            Write notes, let AI find the links, visualize your thinking as a graph.
-            IdeaConnector turns scattered thoughts into a structured knowledge map.
+            Save ideas, connect related notes, and view everything as a graph.
+            IdeaConnector helps you organize what you already know.
+            You can try it now without signing in.
           </p>
           <div className="landing-actions">
-            <button className="landing-btn-primary" onClick={() => navigate('/login')}>
-              Get started free
+            <button className="landing-btn-primary" onClick={() => navigate('/try')}>
+              Try it now
             </button>
             <button className="landing-btn-ghost" onClick={() => navigate('/login')}>
               Sign in <ArrowRightIcon size={14} />
@@ -146,7 +147,7 @@ function Dashboard({ isAuthenticated }) {
               <FileTextIcon size={22} />
             </div>
             <h3>Capture notes</h3>
-            <p>Write anything — ideas, research, code snippets, thoughts. Tag them to build context.</p>
+            <p>Write down ideas, research, or quick thoughts. Add tags so they are easy to find later.</p>
           </div>
 
           <div className="landing-feature">
@@ -154,7 +155,7 @@ function Dashboard({ isAuthenticated }) {
               <Share2Icon size={22} />
             </div>
             <h3>Auto-connect ideas</h3>
-            <p>AI automatically finds relationships between your notes and maps how they relate.</p>
+            <p>The app links notes that are related, so you can spot connections without manual work.</p>
           </div>
 
           <div className="landing-feature">
@@ -162,7 +163,7 @@ function Dashboard({ isAuthenticated }) {
               <NetworkIcon size={22} />
             </div>
             <h3>Visualize the graph</h3>
-            <p>See your entire knowledge base as an interactive graph. Spot patterns you didn’t notice.</p>
+            <p>Open Graph View to see how notes connect and quickly notice clusters or gaps.</p>
           </div>
 
           <div className="landing-feature">
@@ -170,14 +171,14 @@ function Dashboard({ isAuthenticated }) {
               <LightbulbIcon size={22} />
             </div>
             <h3>Generate project ideas</h3>
-            <p>Tell the AI to cross-pollinate your notes and surface unique project ideas tailored to you.</p>
+            <p>Use Idea Generator to turn your notes into practical project ideas you can start.</p>
           </div>
         </div>
 
         <div className="landing-cta-strip">
-          <p>Ready to connect your thinking?</p>
-          <button className="landing-btn-primary" onClick={() => navigate('/login')}>
-            Start for free
+          <p>Explore first, sign in when you want to save more and use AI ideas.</p>
+          <button className="landing-btn-primary" onClick={() => navigate('/try')}>
+            Open demo notes
           </button>
         </div>
 
@@ -206,11 +207,11 @@ function Dashboard({ isAuthenticated }) {
 
       <div className="dash-body">
 
-        {/* ── Top row: Activity (big) + Checklist (small) ── */}
+        {/* Top row: Activity (big) + Checklist (small) */}
         <div className="dash-top-row">
 
           <div className="dash-activity-box">
-            <h2 className="dash-section-title">Activity — last 7 days</h2>
+            <h2 className="dash-section-title">Activity: last 7 days</h2>
             <div className="activity-chart">
               {activityData.map((day, i) => (
                 <div key={i} className="activity-col">

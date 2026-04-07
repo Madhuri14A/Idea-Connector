@@ -42,6 +42,24 @@
   gap: 1.5rem;
 }
 
+.google-btn-wrapper {
+  width: 100%;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: #fff;
+  padding: 4px;
+}
+
+.google-btn-wrapper > div {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .form-toggle {
   display: flex;
   gap: 0.5rem;

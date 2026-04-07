@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
-import { googleLogin, loginUser, registerUser, requestPasswordReset } from '../utils/api';
+import { createNote, googleLogin, loginUser, registerUser, requestPasswordReset } from '../utils/api';
+import { clearGuestNotes, getGuestNotes, setGuestNotes } from '../utils/guestNotes';
 import './Login.css';
 
 function Login({ onLogin, redirectTo = '/' }) {
@@ -13,12 +14,52 @@ function Login({ onLogin, redirectTo = '/' }) {
   const [formData, setFormData] = useState({ email: '', password: '', name: '' });
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleBtnWidth, setGoogleBtnWidth] = useState(380);
+
+  useEffect(() => {
+    const updateGoogleWidth = () => {
+      const viewportWidth = window.innerWidth;
+      const computed = Math.min(380, Math.max(220, viewportWidth - 96));
+      setGoogleBtnWidth(computed);
+    };
+
+    updateGoogleWidth();
+    window.addEventListener('resize', updateGoogleWidth);
+    return () => window.removeEventListener('resize', updateGoogleWidth);
+  }, []);
+
+  const migrateGuestNotesToAccount = async () => {
+    const guestNotes = getGuestNotes();
+    if (!guestNotes.length) return;
+
+    try {
+      const results = await Promise.allSettled(
+        guestNotes.map((note) =>
+          createNote({
+            title: note.title,
+            content: note.content,
+            tags: Array.isArray(note.tags) ? note.tags : [],
+          })
+        )
+      );
+
+      const failed = guestNotes.filter((_, index) => results[index].status === 'rejected');
+      if (failed.length === 0) {
+        clearGuestNotes();
+      } else {
+        setGuestNotes(failed);
+      }
+    } catch (err) {
+      console.error('Guest note import failed:', err);
+    }
+  };
 
   const handleSuccess = async (credentialResponse) => {
     try {
       const { data } = await googleLogin(credentialResponse.credential);
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      await migrateGuestNotesToAccount();
       onLogin?.(data.user);
       navigate(redirectTo);
     } catch (err) {
@@ -47,6 +88,7 @@ function Login({ onLogin, redirectTo = '/' }) {
       const { data } = await apiCall;
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
+      await migrateGuestNotesToAccount();
       onLogin?.(data.user);
       navigate(redirectTo);
     } catch (err) {
@@ -113,15 +155,17 @@ function Login({ onLogin, redirectTo = '/' }) {
     <div className="login-container">
       <div className="login-card">
         <h1>Idea Connector</h1>
-        <p className="subtitle">Connect your ideas. Discover relationships.</p>
+        <p className="subtitle">Sign in to your account</p>
         
         <div className="login-form">
-          <GoogleLogin
-            onSuccess={handleSuccess}
-            onError={() => setError('Google login failed')}
-            text="signin_with"
-            width="100%"
-          />
+          <div className="google-btn-wrapper">
+            <GoogleLogin
+              onSuccess={handleSuccess}
+              onError={() => setError('Google login failed')}
+              text="signin_with"
+              width={googleBtnWidth}
+            />
+          </div>
 
           <div className="divider">OR</div>
 
@@ -171,7 +215,7 @@ function Login({ onLogin, redirectTo = '/' }) {
               className="form-input"
             />
             <button type="submit" disabled={loading} className="submit-btn">
-              {loading ? 'Processing...' : (isSignUp ? 'Create Account' : 'Sign In')}
+              {loading ? (isSignUp ? 'Creating account...' : 'Signing in...') : (isSignUp ? 'Create Account' : 'Sign In')}
             </button>
           </form>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { MenuIcon, SearchIcon, UserIcon, LogOutIcon, LightbulbIcon } from './Icons';
+import { MenuIcon, SearchIcon, UserIcon, LogOutIcon, BrandLogoIcon } from './Icons';
 import './Navbar.css';
 
 function Navbar({ isAuthenticated, onLogout, user, toggleSidebar }) {
@@ -31,9 +31,11 @@ function Navbar({ isAuthenticated, onLogout, user, toggleSidebar }) {
         
         <Link to="/" className="navbar-logo">
           <div className="navbar-logo-icon">
-            <LightbulbIcon size={16} color="white" />
+            <BrandLogoIcon size={30} color="#111111" />
           </div>
-          <span>IdeaConnector</span>
+          <span className="logo-wordmark">
+            <span className="logo-word-idea">idea</span><span className="logo-word-connector">Connector</span>
+          </span>
         </Link>
         
         {isAuthenticated && (

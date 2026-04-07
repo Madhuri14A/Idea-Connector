@@ -1,0 +1,68 @@
+.guest-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.65rem 1rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.guest-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.guest-badge {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.guest-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.guest-nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.25rem 0.6rem;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background 0.2s;
+  font-size: 0.85rem;
+}
+
+.guest-nav-link:hover,
+.guest-nav-link.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.guest-signin-btn {
+  background: var(--secondary);
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.guest-signin-btn:hover {
+  background: var(--success);
+}

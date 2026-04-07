@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import './Ideas.css';
 import IdeaWeaver from '../components/IdeaWeaver';
 import { generateIdeas } from '../utils/api';
+import { Link } from 'react-router-dom';
+import GuestBanner from '../components/GuestBanner';
 import { LightbulbIcon, SparkleIcon, PaperclipIcon } from '../components/Icons';
 
 const getTypeLabel = (type) => {
@@ -22,7 +24,7 @@ const getTypeLabel = (type) => {
   return labels[type] || 'Idea';
 };
 
-function Ideas() {
+function Ideas({ isGuest = false }) {
   const [ideas, setIdeas] = useState([]);
   const [loading, setLoading] = useState(false);
   const [generated, setGenerated] = useState(false);
@@ -65,16 +67,31 @@ function Ideas() {
     <div className="ideas-container">
       <div className="ideas-header">
         <h1>Project Ideas Generator</h1>
-        <p className="subtitle">Discover project ideas based on your notes</p>
-        
-        <button 
-          onClick={handleGenerateIdeas} 
-          disabled={loading}
-          className="btn-generate"
-        >
-          {loading ? 'Generating...' : <><SparkleIcon size={15} /> Generate Ideas</>}
-        </button>
+        <p className="subtitle">{isGuest ? 'AI-powered ideas based on your saved notes' : 'Discover project ideas based on your notes'}</p>
+
+        {isGuest ? null : (
+          <button
+            onClick={handleGenerateIdeas}
+            disabled={loading}
+            className="btn-generate"
+          >
+            {loading ? 'Generating...' : <><SparkleIcon size={15} /> Generate Ideas</>}
+          </button>
+        )}
       </div>
+
+      {isGuest && (
+        <div style={{ padding: '0 0 1.5rem' }}>
+          <GuestBanner currentPage="ideas" />
+          <div className="ideas-guest-gate">
+            <div className="ideas-gate-icon" aria-hidden="true"><SparkleIcon size={44} /></div>
+            <h2>AI suggestions need a real account</h2>
+            <p>Sign in, save a few notes, and the AI will read through them and suggest project ideas based on what you know.</p>
+            <Link to="/login" className="btn btn-primary">Sign in to try AI</Link>
+            <Link to="/try" className="gate-back-link" style={{ display: 'block', textAlign: 'center', marginTop: '0.75rem', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.875rem' }}>← Back to trial notes</Link>
+          </div>
+        </div>
+      )}
 
       {generated && ideas.length > 0 ? (
         <div className="ideas-content">

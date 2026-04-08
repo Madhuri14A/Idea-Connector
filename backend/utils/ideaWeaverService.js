@@ -15,6 +15,8 @@ Your job:
 - Then focus on: what's the realistic unique angle for THIS person given their context?
 - Keep responses short, plain, and conversational. No buzzwords, no corporate language, no lists of 7 things. Write like a smart friend giving advice.
 - Never pad responses with filler phrases like "Great idea!" or "Absolutely!" Just get to the point.
+- Do not use markdown, asterisks, bold text, or decorative formatting. Plain text only.
+- Do not add headings unless the user explicitly asks for a structured answer.
 
 Actions:
 
@@ -38,7 +40,36 @@ Rules for chat:
 - No headings, no bullet lists, no long intros unless the user asks for detail.
 - If the user asks a bigger question, still stay concise and practical.
 - Always aim to be helpful, honest, and direct. No fluff or corporate speak. Just real advice.
-- Do not waste tokens, answer straightly with limited important and necessary information.`;
+- Do not waste tokens, answer straightly with limited important and necessary information.
+- Do not use markdown, asterisks, bold text, or decorative formatting. Plain text only.`;
+
+const isQuotaOrTemporaryError = (error) => {
+  const msg = String(error?.message || '').toLowerCase();
+  const status = Number(error?.status || error?.response?.status || 0);
+  return (
+    status === 429 ||
+    status === 503 ||
+    msg.includes('quota') ||
+    msg.includes('too many requests') ||
+    msg.includes('rate limit') ||
+    msg.includes('service unavailable')
+  );
+};
+
+const localFallbackReply = (userMessage = '', currentIdea = '') => {
+  const msg = String(userMessage).trim().toLowerCase();
+  const isGreeting = /^(hi|hey|hello|hii|heyy)\b/.test(msg);
+
+  if (isGreeting) {
+    return 'Hey. AI is temporarily unavailable due to quota. You can still use Suggestions and try chat again later.';
+  }
+
+  if (!currentIdea) {
+    return 'AI is temporarily unavailable due to quota. Try again later, or use Suggestions for now.';
+  }
+
+  return 'AI is temporarily unavailable due to quota. For now, focus on one small next step for this idea: define your main user and the first feature they need most.';
+};
 
 /**
  * Process user message with Idea Weaver AI
@@ -67,6 +98,9 @@ const weaveIdea = async (actionType, ideaContent, conversationHistory = []) => {
     return responseText;
   } catch (error) {
     console.error('Error in Idea Weaver:', error);
+    if (isQuotaOrTemporaryError(error)) {
+      return 'AI shortcut is temporarily unavailable due to quota. Please try again later.';
+    }
     throw error;
   }
 };
@@ -107,6 +141,9 @@ const chatWithWeaver = async (userMessage, conversationHistory = [], currentIdea
     return responseText;
   } catch (error) {
     console.error('Error chatting with Weaver:', error);
+    if (isQuotaOrTemporaryError(error)) {
+      return localFallbackReply(userMessage, currentIdea);
+    }
     throw error;
   }
 };

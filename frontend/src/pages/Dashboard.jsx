@@ -269,7 +269,7 @@ function Dashboard({ isAuthenticated }) {
                     <LightbulbIcon size={15} /> Idea Generator
                   </button>
                   <button className="quick-link" onClick={() => navigate('/ideas')}>
-                    <WandIcon size={15} /> Idea Weaver
+                    <WandIcon size={15} /> Mimo
                   </button>
                 </div>
               </>

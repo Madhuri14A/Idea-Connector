@@ -34,11 +34,11 @@ const IdeaWeaver = ({ idea, onClose, position }) => {
   }, []);
 
   const actions = [
-    { type: 'EXPLAIN', label: 'Explain', Icon: BookOpenIcon },
-    { type: 'BUILD', label: 'Build Plan', Icon: WrenchIcon },
-    { type: 'RISKS', label: 'Risks', Icon: AlertTriangleIcon },
-    { type: 'DIFFERENTIATE', label: 'What makes it unique?', Icon: Share2Icon },
-    { type: 'REFINE', label: 'Refine', Icon: SparkleIcon }
+    { type: 'EXPLAIN', label: 'What is it?', Icon: BookOpenIcon },
+    { type: 'BUILD', label: 'First steps', Icon: WrenchIcon },
+    { type: 'RISKS', label: 'What is weak?', Icon: AlertTriangleIcon },
+    { type: 'DIFFERENTIATE', label: 'Stand out', Icon: Share2Icon },
+    { type: 'REFINE', label: 'Say it simply', Icon: SparkleIcon }
   ];
 
   const handleActionClick = async (actionType) => {
@@ -53,9 +53,10 @@ const IdeaWeaver = ({ idea, onClose, position }) => {
       });
 
       if (data.success) {
+        const actionLabel = actions.find(action => action.type === actionType)?.label || actionType;
         setMessages([
           ...messages,
-          { role: 'user', content: `Action: ${actionType}`, action: actionType },
+          { role: 'user', content: actionLabel, action: actionLabel },
           { role: 'assistant', content: data.response }
         ]);
         setActiveTab('chat');
@@ -107,7 +108,7 @@ const IdeaWeaver = ({ idea, onClose, position }) => {
     return (
       <div className="weaver-container">
         <div className="weaver-empty">
-          <p>Select an idea to start weaving!</p>
+          <p>Select an idea to start chatting.</p>
         </div>
       </div>
     );
@@ -122,7 +123,7 @@ const IdeaWeaver = ({ idea, onClose, position }) => {
     <div className="weaver-mobile-backdrop" onClick={onClose} />
     <div className={`weaver-container ${position ? 'anchored' : ''}`} style={weaverStyle}>
       <div className="weaver-header">
-        <h3><WandIcon size={16} /> Idea Weaver {loading ? '...' : ''}</h3>
+        <h3><WandIcon size={16} /> Mimo {loading ? '...' : ''}</h3>
         <div className="weaver-header-actions">
           <button className="weaver-clear-btn" onClick={clearHistory} disabled={messages.length === 0}>
             Clear
@@ -143,7 +144,7 @@ const IdeaWeaver = ({ idea, onClose, position }) => {
           className={`tab ${activeTab === 'actions' ? 'active' : ''}`}
           onClick={() => setActiveTab('actions')}
         >
-          Quick Actions
+          Shortcuts
         </button>
         <button
           className={`tab ${activeTab === 'chat' ? 'active' : ''}`}
@@ -175,7 +176,7 @@ const IdeaWeaver = ({ idea, onClose, position }) => {
           <div className="messages-box">
             {messages.length === 0 ? (
               <div className="empty-state">
-                <p>Start a conversation! Use quick actions or type your question.</p>
+                <p>Ask something short, or use a shortcut.</p>
               </div>
             ) : (
               messages.map((msg, idx) => (

@@ -8,7 +8,7 @@ if (process.env.GEMINI_API_KEY) {
   model = geminiClient.getGenerativeModel({ model: 'gemini-2.5-flash' });
 }
 
-const SYSTEM_PROMPT = `You are a no-nonsense idea coach inside a note-taking app. The user has just written a rough idea from their notes.
+const ACTION_PROMPT = `You are a no-nonsense idea coach inside a note-taking app. The user has just written a rough idea from their notes.
 
 Your job:
 - Be honest. If something like this already exists, say so clearly.
@@ -27,6 +27,18 @@ RISKS: Be honest — what are the 2 real reasons this might not work? Be specifi
 DIFFERENTIATE: Name 2-3 apps or products that already do something similar. Then say exactly what angle could make this person's version different — based on their specific context, not generic advice.
 
 REFINE: Rewrite the idea as one clear sentence that explains what it does and who it's for. No buzzwords.`;
+
+const CHAT_PROMPT = `You are a no-nonsense idea coach inside a note-taking app.
+
+Rules for chat:
+- Reply like a normal person, not like a feature menu.
+- Keep replies short by default: usually 1-3 sentences.
+- If the user sends a greeting like "hi", "hello", or "hey", respond in one short friendly sentence only.
+- Do not mention EXPLAIN, BUILD, RISKS, DIFFERENTIATE, or REFINE unless the user explicitly asks for them.
+- No headings, no bullet lists, no long intros unless the user asks for detail.
+- If the user asks a bigger question, still stay concise and practical.
+- Always aim to be helpful, honest, and direct. No fluff or corporate speak. Just real advice.
+- Do not waste tokens, answer straightly with limited important and necessary information.`;
 
 /**
  * Process user message with Idea Weaver AI
@@ -47,7 +59,7 @@ const weaveIdea = async (actionType, ideaContent, conversationHistory = []) => {
 
   try {
     // Create a simple prompt without chat history for action-based requests
-    const prompt = `${SYSTEM_PROMPT}\n\nAction: ${actionType}\n\nIdea/Note: ${ideaContent}`;
+    const prompt = `${ACTION_PROMPT}\n\nAction: ${actionType}\n\nIdea/Note: ${ideaContent}`;
     
     const result = await model.generateContent(prompt);
     const responseText = result.response.text();
@@ -75,7 +87,7 @@ const chatWithWeaver = async (userMessage, conversationHistory = [], currentIdea
     const context = currentIdea ? `\n\nCurrent Idea Context: ${currentIdea}` : '';
     
     // Build the full prompt including conversation history
-    let fullPrompt = `${SYSTEM_PROMPT}${context}\n\nYou are having a creative conversation helping the user develop, refine, and validate their ideas.\n\n`;
+    let fullPrompt = `${CHAT_PROMPT}${context}\n\nYou are having a short conversation helping the user develop, refine, and validate their ideas.\n\n`;
     
     // Add conversation history
     conversationHistory.forEach(msg => {
@@ -102,5 +114,6 @@ const chatWithWeaver = async (userMessage, conversationHistory = [], currentIdea
 module.exports = {
   weaveIdea,
   chatWithWeaver,
-  SYSTEM_PROMPT
+  ACTION_PROMPT,
+  CHAT_PROMPT
 };

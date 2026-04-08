@@ -42,9 +42,9 @@
 
 .sidebar-logo .logo-word-idea,
 .sidebar-logo .logo-word-connector {
-  font-family: 'Suez One', 'Inter', serif;
-  font-weight: 400;
-  letter-spacing: 0;
+  font-family: 'Quicksand', 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   font-size: 1.24rem;
 }
 

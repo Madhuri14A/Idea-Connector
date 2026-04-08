@@ -37,7 +37,7 @@ const IdeaWeaver = ({ idea, onClose, position }) => {
     { type: 'EXPLAIN', label: 'Explain', Icon: BookOpenIcon },
     { type: 'BUILD', label: 'Build Plan', Icon: WrenchIcon },
     { type: 'RISKS', label: 'Risks', Icon: AlertTriangleIcon },
-    { type: 'SIMILAR', label: 'Similar', Icon: Share2Icon },
+    { type: 'DIFFERENTIATE', label: 'What makes it unique?', Icon: Share2Icon },
     { type: 'REFINE', label: 'Refine', Icon: SparkleIcon }
   ];
 

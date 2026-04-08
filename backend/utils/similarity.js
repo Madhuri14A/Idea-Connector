@@ -2,26 +2,51 @@ const natural = require('natural');
 const tokenizer = new natural.WordTokenizer();
 const stemmer = natural.PorterStemmer;
 
+const stopwords = new Set([
+  'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'is', 'are', 'was', 'be', 'been', 'being',
+  'with', 'this', 'that', 'it', 'as', 'by', 'from', 'use', 'using', 'used', 'can', 'will', 'have', 'has', 'had',
+  'not', 'do', 'does', 'did', 'so', 'if', 'its', 'my', 'your', 'we', 'they', 'i', 'he', 'she', 'you', 'us', 'our',
+  'which', 'who', 'what', 'when', 'where', 'how', 'about', 'into', 'up', 'out', 'like', 'than', 'more', 'also',
+  'get', 'set', 'make', 'made', 'new', 'add', 'note', 'notes', 'project', 'create', 'creates', 'creating', 'created',
+  'build', 'builds', 'building', 'built', 'work', 'works', 'working', 'worked', 'need', 'needs', 'needed',
+  'just', 'one', 'two', 'three', 'first', 'some', 'any', 'all', 'each', 'no', 'yes', 'then', 'now', 'after',
+  'before', 'should', 'would', 'could', 'may', 'might', 'want', 'let', 'run', 'runs', 'running', 'see', 'know',
+  'way', 'time', 'thing', 'things', 'type', 'types', 'different', 'used', 'help', 'allows', 'allow', 'support',
+  'include', 'includes', 'including', 'provides', 'provide', 'feature', 'features', 'system', 'platform', 'tool',
+  'implement', 'implemented', 'implementing', 'example', 'simple', 'basic', 'similar', 'same', 'well', 'also'
+]);
+
+const normalizeTokens = (text = '') => {
+  const words = tokenizer.tokenize(String(text).toLowerCase());
+  return words
+    .filter(w => !stopwords.has(w) && w.length > 2)
+    .map(w => stemmer.stem(w));
+};
+
+const getNGrams = (tokens, n = 2) => {
+  const grams = [];
+  for (let i = 0; i <= tokens.length - n; i++) {
+    grams.push(tokens.slice(i, i + n).join(' '));
+  }
+  return grams;
+};
+
+const getJaccardSimilarity = (itemsA = [], itemsB = []) => {
+  const setA = new Set(itemsA);
+  const setB = new Set(itemsB);
+  if (setA.size === 0 || setB.size === 0) return 0;
+
+  let intersection = 0;
+  setA.forEach(item => {
+    if (setB.has(item)) intersection += 1;
+  });
+
+  const union = new Set([...setA, ...setB]).size;
+  return union === 0 ? 0 : intersection / union;
+};
+
 const extractKeywords = (text, topN = 10) => {
-  const words = tokenizer.tokenize(text.toLowerCase());
-
-  const stopwords = new Set([
-    'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'is', 'are', 'was', 'be', 'been', 'being',
-    'with', 'this', 'that', 'it', 'as', 'by', 'from', 'use', 'using', 'used', 'can', 'will', 'have', 'has', 'had',
-    'not', 'do', 'does', 'did', 'so', 'if', 'its', 'my', 'your', 'we', 'they', 'i', 'he', 'she', 'you', 'us', 'our',
-    'which', 'who', 'what', 'when', 'where', 'how', 'about', 'into', 'up', 'out', 'like', 'than', 'more', 'also',
-    'get', 'set', 'make', 'made', 'new', 'add', 'note', 'notes', 'project', 'create', 'creates', 'creating', 'created',
-    'build', 'builds', 'building', 'built', 'work', 'works', 'working', 'worked', 'need', 'needs', 'needed',
-    'just', 'one', 'two', 'three', 'first', 'some', 'any', 'all', 'each', 'no', 'yes', 'then', 'now', 'after',
-    'before', 'should', 'would', 'could', 'may', 'might', 'want', 'let', 'run', 'runs', 'running', 'see', 'know',
-    'way', 'time', 'thing', 'things', 'type', 'types', 'different', 'used', 'help', 'allows', 'allow', 'support',
-    'include', 'includes', 'including', 'provides', 'provide', 'feature', 'features', 'system', 'platform', 'tool',
-    'implement', 'implemented', 'implementing', 'example', 'simple', 'basic', 'similar', 'same', 'well', 'also'
-  ]);
-
-  // Filter BEFORE stemming — so 'creating' matches 'create' in the stoplist
-  const rawFiltered = words.filter(w => !stopwords.has(w) && w.length > 2);
-  const stemmed = rawFiltered.map(w => stemmer.stem(w));
+  const stemmed = normalizeTokens(text);
   
   
   const freqMap = {};
@@ -60,13 +85,43 @@ const getCosineSimilarity = (text1, text2) => {
 };
 
 const findSimilarNotes = (targetNote, allNotes, threshold = 0.4) => {
-  const targetText = `${targetNote.title} ${targetNote.content} ${(targetNote.tags || []).join(' ')}`;
+  const getContextSimilarity = (noteA, noteB) => {
+    const titleA = noteA.title || '';
+    const titleB = noteB.title || '';
+    const contentA = noteA.content || '';
+    const contentB = noteB.content || '';
+
+    const titleSimilarity = getCosineSimilarity(titleA, titleB);
+    const contentSimilarity = getCosineSimilarity(contentA, contentB);
+
+    const keywordA = extractKeywords(`${titleA} ${contentA}`, 20).map(k => k.word);
+    const keywordB = extractKeywords(`${titleB} ${contentB}`, 20).map(k => k.word);
+    const keywordSimilarity = getJaccardSimilarity(keywordA, keywordB);
+
+    const tokensA = normalizeTokens(`${titleA} ${contentA}`).slice(0, 140);
+    const tokensB = normalizeTokens(`${titleB} ${contentB}`).slice(0, 140);
+    const bigramA = getNGrams(tokensA, 2);
+    const bigramB = getNGrams(tokensB, 2);
+    const phraseSimilarity = getJaccardSimilarity(bigramA, bigramB);
+
+    const tagsA = (noteA.tags || []).map(t => String(t).toLowerCase());
+    const tagsB = (noteB.tags || []).map(t => String(t).toLowerCase());
+    const tagSimilarity = getJaccardSimilarity(tagsA, tagsB);
+
+    // Context first, tags last
+    return (
+      (titleSimilarity * 0.35) +
+      (contentSimilarity * 0.35) +
+      (phraseSimilarity * 0.20) +
+      (keywordSimilarity * 0.07) +
+      (tagSimilarity * 0.03)
+    );
+  };
   
   return allNotes
     .filter(note => note.id !== targetNote.id)
     .map(note => {
-      const noteText = `${note.title} ${note.content} ${(note.tags || []).join(' ')}`;
-      const similarity = getCosineSimilarity(targetText, noteText);
+      const similarity = getContextSimilarity(targetNote, note);
       return { 
         noteId: note.id, 
         similarity: Math.round(similarity * 100) / 100 // Round to 2 decimals

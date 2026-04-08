@@ -1,7 +1,7 @@
 .note-detail {
   max-width: 900px;
   margin: 0 auto;
-  /* Removed padding in favor of wrapper */
+  
 }
 
 .detail-header {
@@ -118,7 +118,7 @@
   color: #d32f2f;
 }
 
-/* Related Notes Section */
+
 .related-notes-section {
   margin-top: 3rem;
   padding-top: 2rem;

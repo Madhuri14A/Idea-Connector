@@ -5,7 +5,7 @@ const generateIdeas = (notes) => {
     return [{
       id: '1',
       title: 'Add More Notes First',
-      description: 'Create at least 3-5 notes with different topics to get personalized project suggestions. The more context you give, the smarter the ideas get.',
+      description: 'Create at least 3-5 notes with different topics to get useful suggestions. More context helps us suggest practical improvements and meaningful note connections.',
       technologies: [],
       relatedNoteIds: [],
       confidence: 50,
@@ -44,7 +44,39 @@ const generateIdeas = (notes) => {
   const uniqueIdeas = deduplicateIdeas(ideas);
   const scoredIdeas = scoreAndRankIdeas(uniqueIdeas, analysis);
 
-  return scoredIdeas.slice(0, 6);
+  return scoredIdeas
+    .slice(0, 6)
+    .map(formatAsSuggestion);
+};
+
+const formatAsSuggestion = (idea) => {
+  const hasConnection = Array.isArray(idea.relatedNoteIds) && idea.relatedNoteIds.length >= 2;
+
+  let suggestionType = 'Improvement';
+  if (hasConnection) {
+    suggestionType = 'Connection';
+  } else if (idea.type === 'gap-analysis') {
+    suggestionType = 'Missing Piece';
+  }
+
+  const cleanDescription = String(idea.description || '')
+    .replace(/\b(weekend hackathon|recruiters love|DNA|cross-domain approach|innovative products?)\b/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  const prefix = hasConnection
+    ? 'These notes are contextually related. Try combining them this way:'
+    : suggestionType === 'Missing Piece'
+      ? 'Your notes suggest a gap. A practical next step:'
+      : 'Based on your notes, here is a practical improvement:';
+
+  return {
+    ...idea,
+    type: 'suggestion',
+    suggestionType,
+    title: hasConnection ? `Connect: ${idea.title}` : `Improve: ${idea.title}`,
+    description: `${prefix} ${cleanDescription}`.trim()
+  };
 };
 
 // ─── Deep Knowledge Analysis ─────────────────────────────────────────────────

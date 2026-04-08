@@ -23,10 +23,8 @@ router.get('/generate', async (req, res) => {
       connections: record.get('connections').filter(c => c.note !== null)
     }));
 
-    const localIdeas = generateIdeas(notes);
+    const ideas = generateIdeas(notes);
 
-    const ideas = await generateAIEnhancedIdeas(notes, localIdeas);
-    
     res.json({ ideas });
   } catch (error) {
     console.error('Error generating ideas:', error);

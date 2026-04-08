@@ -79,7 +79,7 @@ const Sidebar = ({ isOpen, onClose, user, onLogout, isAuthenticated }) => {
             onClick={onClose}
           >
             <LightbulbIcon className="nav-link-icon" />
-            <span>Idea Generator</span>
+            <span>Idea Suggestions</span>
           </NavLink>
           
           <div className="nav-label" style={{ marginTop: '1.5rem' }}>Actions</div>

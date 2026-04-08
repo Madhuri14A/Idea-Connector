@@ -71,8 +71,8 @@ function Ideas({ isGuest = false }) {
   return (
     <div className="ideas-container">
       <div className="ideas-header">
-        <h1>Project Ideas Generator</h1>
-        <p className="subtitle">{isGuest ? 'AI-powered ideas based on your saved notes' : 'Discover project ideas based on your notes'}</p>
+        <h1>Idea Suggestions</h1>
+        <p className="subtitle">{isGuest ? 'Helpful suggestions from your saved notes' : 'Get practical improvements and meaningful note connections'}</p>
 
         {isGuest ? null : (
           <button
@@ -80,7 +80,7 @@ function Ideas({ isGuest = false }) {
             disabled={loading}
             className="btn-generate"
           >
-            {loading ? 'Generating...' : <><SparkleIcon size={15} /> Generate Ideas</>}
+            {loading ? 'Generating...' : <><SparkleIcon size={15} /> Get Suggestions</>}
           </button>
         )}
       </div>
@@ -90,9 +90,9 @@ function Ideas({ isGuest = false }) {
           <GuestBanner currentPage="ideas" />
           <div className="ideas-guest-gate">
             <div className="ideas-gate-icon" aria-hidden="true"><SparkleIcon size={44} /></div>
-            <h2>AI suggestions need a real account</h2>
-            <p>Sign in, save a few notes, and the AI will read through them and suggest project ideas based on what you know.</p>
-            <Link to="/login" className="btn btn-primary">Sign in to try AI</Link>
+            <h2>Personalized suggestions need a real account</h2>
+            <p>Sign in, save a few notes, and we will suggest practical improvements and meaningful connections from your notes.</p>
+            <Link to="/login" className="btn btn-primary">Sign in to try Suggestions</Link>
             <Link to="/try" className="gate-back-link" style={{ display: 'block', textAlign: 'center', marginTop: '0.75rem', color: 'var(--text-secondary)', textDecoration: 'none', fontSize: '0.875rem' }}>← Back to trial notes</Link>
           </div>
         </div>
@@ -162,12 +162,12 @@ function Ideas({ isGuest = false }) {
         </div>
       ) : generated && ideas.length === 0 ? (
         <div className="empty-state">
-          <p>No ideas generated. Try adding more notes first!</p>
+          <p>No suggestions yet. Try adding a few more notes first.</p>
         </div>
       ) : (
         <div className="ideas-hero">
           <div className="hero-icon"><LightbulbIcon size={48} className="hero-svg-icon" /></div>
-          <p>Click the button above to generate creative project ideas based on your notes</p>
+          <p>Click the button above to get useful suggestions from your notes</p>
         </div>
       )}
     </div>

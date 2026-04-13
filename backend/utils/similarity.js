@@ -109,16 +109,23 @@ const findSimilarNotes = (targetNote, allNotes, threshold = 0.4) => {
     const tagSimilarity = getJaccardSimilarity(tagsA, tagsB);
 
     // Context first, tags last
-    return (
+    const score = (
       (titleSimilarity * 0.35) +
       (contentSimilarity * 0.35) +
       (phraseSimilarity * 0.20) +
       (keywordSimilarity * 0.07) +
       (tagSimilarity * 0.03)
     );
+
+    // Debug logging (shows why notes connect or don't)
+    if (process.env.DEBUG_SIMILARITY) {
+      console.log(`[SIM] ${noteA.id.slice(0,8)} vs ${noteB.id.slice(0,8)}: ${score.toFixed(3)} (title:${titleSimilarity.toFixed(2)} content:${contentSimilarity.toFixed(2)} phrase:${phraseSimilarity.toFixed(2)} kw:${keywordSimilarity.toFixed(2)} tag:${tagSimilarity.toFixed(2)})`);
+    }
+
+    return score;
   };
   
-  return allNotes
+  const results = allNotes
     .filter(note => note.id !== targetNote.id)
     .map(note => {
       const similarity = getContextSimilarity(targetNote, note);
@@ -129,6 +136,13 @@ const findSimilarNotes = (targetNote, allNotes, threshold = 0.4) => {
     })
     .filter(({similarity}) => similarity >= threshold)
     .sort((a, b) => b.similarity - a.similarity);
+
+  // Debug: show how many connections this note got
+  if (process.env.DEBUG_SIMILARITY) {
+    console.log(`[SIM] Note "${targetNote.title?.slice(0,30)}" threshold=${threshold}: ${results.length} matches found`);
+  }
+
+  return results;
 };
 
 module.exports = { 

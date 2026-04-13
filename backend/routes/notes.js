@@ -172,7 +172,7 @@ router.get('/:id/related', async (req, res) => {
       return true;
     });
 
-    const relatedNotes = findSimilarNotes(targetNote, allNotes, 0.25);
+    const relatedNotes = findSimilarNotes(targetNote, allNotes, 0.10);
 
     const topRelated = relatedNotes.slice(0, 5).map(({noteId, similarity}) => {
       const note = allNotes.find(n => n.id === noteId);
@@ -267,14 +267,15 @@ router.post('/', async (req, res) => {
     );
     const allNotes = allNotesResult.records.map(r => serializeNote(r.get('n').properties));
     
-    const similarNotes = findSimilarNotes(note, allNotes, 0.20);
+    //threshold
+    const similarNotes = findSimilarNotes(note, allNotes, 0.03);
     
 
     for (let sim of similarNotes) {
       await session.run(
         `MATCH (a:Note), (b:Note)
          WHERE a.id = $id1 AND b.id = $id2
-         MERGE (a)-[rel:RELATES_TO {strength: $strength}]-(b)`,
+         MERGE (a)-[rel:RELATES_TO {strength: $strength, createdBy: 'auto'}]-(b)`,
         { id1: note.id, id2: sim.noteId, strength: sim.similarity }
       );
     }
@@ -353,22 +354,37 @@ router.post('/rebuild/connections', async (req, res) => {
       `MATCH (u:User {email: $userId})-[:CREATED]->(n:Note) RETURN n`,
       { userId: req.userId }
     );
-    const allNotes = allNotesResult.records.map(r => r.get('n').properties);
+    const allNotes = allNotesResult.records.map(r => serializeNote(r.get('n').properties));
+
+    let connectionsCreated = 0;
+    const processedNotes = new Set();
 
     for (let note of allNotes) {
-      const similarNotes = findSimilarNotes(note, allNotes, 0.20);
+     
+      const similarNotes = findSimilarNotes(note, allNotes, 0.03);
       
       for (let sim of similarNotes) {
-        await session.run(
-          `MATCH (a:Note), (b:Note)
-           WHERE a.id = $id1 AND b.id = $id2
-           MERGE (a)-[rel:RELATES_TO {strength: $strength}]-(b)`,
-          { id1: note.id, id2: sim.noteId, strength: sim.similarity }
-        );
+        // Avoid creating duplicate relationships
+        const key = [note.id, sim.noteId].sort().join('-');
+        if (!processedNotes.has(key)) {
+          processedNotes.add(key);
+          
+          await session.run(
+            `MATCH (a:Note), (b:Note)
+             WHERE a.id = $id1 AND b.id = $id2
+             MERGE (a)-[rel:RELATES_TO {strength: $strength, createdBy: 'auto'}]-(b)`,
+            { id1: note.id, id2: sim.noteId, strength: sim.similarity }
+          );
+          connectionsCreated++;
+        }
       }
     }
     
-    res.json({ message: 'All connections rebuilt successfully', notesProcessed: allNotes.length });
+    res.json({ 
+      message: 'All connections rebuilt successfully', 
+      notesProcessed: allNotes.length,
+      connectionsCreated: connectionsCreated
+    });
   } catch (error) {
     console.error('Error rebuilding connections:', error);
     res.status(500).json({ error: 'Failed to rebuild connections' });

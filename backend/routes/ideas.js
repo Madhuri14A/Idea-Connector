@@ -23,7 +23,7 @@ router.get('/generate', async (req, res) => {
       connections: record.get('connections').filter(c => c.note !== null)
     }));
 
-    const ideas = generateIdeas(notes);
+    const ideas = await generateIdeas(notes);
 
     res.json({ ideas });
   } catch (error) {

@@ -191,7 +191,7 @@ export const BrandLogoIcon = ({ size = 24, color = "currentColor", className = "
       d="M 6 11 L 12 11 A 4 4 0 0 1 12 19 L 9 19 L 2 22 L 6 19 A 4 4 0 0 1 6 11 Z"
       fill="white" stroke={color} strokeWidth="1.1" strokeLinejoin="round"
     />
-    {/* Three muted dots inside front bubble (center x=9, y=15) */}
+    
     <circle cx="7"  cy="15" r="1.1" fill="#C97080" />
     <circle cx="9"  cy="15" r="1.1" fill="#5EA8A3" />
     <circle cx="11" cy="15" r="1.1" fill="#5898B0" />

@@ -40,9 +40,9 @@
 
 .navbar-logo .logo-word-idea,
 .navbar-logo .logo-word-connector {
-  font-family: 'Quicksand', 'Inter', sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   font-size: 1.18rem;
 }
 
